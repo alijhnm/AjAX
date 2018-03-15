@@ -1,5 +1,5 @@
 import os
-home = '/home/ali'
+home = os.path.expanduser('~')
 currentdir = '/home/ali'
 
 
@@ -7,6 +7,7 @@ currentdir = '/home/ali'
 #change directory
 def cd(filename):
     global currentdir
+
     currentdir = os.path.join(currentdir , filename)
 
 
@@ -15,7 +16,18 @@ def ls ():
     q = os.listdir(currentdir)
     print(q)
 
+#supose to finde out if its dir or file!
+def filehandle (filename) :
+    (shortname , extension) = os.path.splitext(filename)
 
+#making newfolder in given path without name
+def newfolder(path):
+    tmp = os.path.join(path , 'new folder')
+    os.mkdir(tmp)
+
+#renaming folder and files
+def rename(expath , newpath):
+    os.rename(expath , newpath)
 
 #basic file manager
 while True:
@@ -27,6 +39,6 @@ while True:
         currentdir = os.path.split(currentdir)[0]
 
     else :
-        cd(os.listdir(currentdir)[int(inp)])
+        cd(inp)
 
 
