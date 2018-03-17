@@ -181,7 +181,10 @@ class Ui_MainWindow(object):
 
     def tree_double_click(self,event):
         if event.button()==QtCore.Qt.LeftButton :
-            os.startfile(self.model.filePath(self.tree_view.currentIndex()))
+            try :
+                os.startfile(self.model.filePath(self.tree_view.currentIndex()))
+            except :
+                pass
 
 
 if __name__ == "__main__":
