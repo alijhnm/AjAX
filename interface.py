@@ -8,6 +8,12 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+recent_directories_list = ["C:/Users","C:/Descktop"]
+directories = ["C:/Users","C:/Descktop","D","E","F","G"]
+list_of_items_in_directory = ["ali","saeed","baby","jetli","ddd","qqq","tTT"]
+pointer = 0
+
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -54,7 +60,7 @@ class Ui_MainWindow(object):
         self.label.setWordWrap(False)
         self.label.setObjectName("label")
         self.lineEdit = QtWidgets.QLineEdit(self.frame)
-        self.lineEdit.setGeometry(QtCore.QRect(250, 20, 391, 21))
+        self.lineEdit.setGeometry(QtCore.QRect(250, 20, 370, 21))
         self.lineEdit.setStatusTip("")
         self.lineEdit.setWhatsThis("")
         self.lineEdit.setInputMethodHints(QtCore.Qt.ImhNone)
@@ -62,20 +68,35 @@ class Ui_MainWindow(object):
         self.lineEdit.setObjectName("lineEdit")
         self.pushButton_2 = QtWidgets.QPushButton(self.frame)
         self.pushButton_2.setGeometry(QtCore.QRect(220, 20, 21, 21))
-        self.pushButton_2.setText("")
+        self.pushButton_2.setText("B")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/Icons/Back.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/Back.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_2.setIcon(icon1)
         self.pushButton_2.setIconSize(QtCore.QSize(20, 20))
         self.pushButton_2.setDefault(False)
         self.pushButton_2.setFlat(True)
         self.pushButton_2.setObjectName("pushButton_2")
+        self.pushButton_2.clicked.connect(self.Back)
+
+        self.pushButton_1 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_1.setGeometry(QtCore.QRect(670, 20, 21, 21))
+        self.pushButton_1.setText("S")
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap(":/Go.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.pushButton_1.setIcon(icon2)
+        self.pushButton_1.setIconSize(QtCore.QSize(20, 20))
+        self.pushButton_1.setDefault(False)
+        self.pushButton_1.setFlat(True)
+        self.pushButton_1.setObjectName("pushButton_3")
+        self.pushButton_1.clicked.connect(lambda: self.search(self.lineEdit.text()))
+        MainWindow.setCentralWidget(self.centralwidget)
+
+
         self.comboBox = QtWidgets.QComboBox(self.frame)
-        self.comboBox.setGeometry(QtCore.QRect(250, 20, 411, 20))
+        self.comboBox.setGeometry(QtCore.QRect(250, 20, 390, 20))
         self.comboBox.setObjectName("comboBox")
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
         self.comboBox.raise_()
+        self.comboBox.activated.connect(lambda: self.Go_to_directory(self.comboBox.currentText()))
         self.label.raise_()
         self.lineEdit.raise_()
         self.pushButton_2.raise_()
@@ -90,6 +111,8 @@ class Ui_MainWindow(object):
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
         self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 479, 399))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
+        #self.scrollArea.setWidget(QtWidgets.QPushButton(self.scrollAreaWidgetContents).setText("KF"))
+        #self.scrollArea.setWidget(QtWidgets.QPushButton(self.scrollAreaWidgetContents).setText("LY"))
         self.gridLayoutWidget = QtWidgets.QWidget(self.scrollAreaWidgetContents)
         self.gridLayoutWidget.setGeometry(QtCore.QRect(9, 10, 461, 381))
         self.gridLayoutWidget.setObjectName("gridLayoutWidget")
@@ -98,15 +121,16 @@ class Ui_MainWindow(object):
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_3.setGeometry(QtCore.QRect(670, 20, 21, 21))
-        self.pushButton_3.setText("")
+        self.pushButton_3.setGeometry(QtCore.QRect(650, 20, 21, 21))
+        self.pushButton_3.setText("Go")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(":/Icons/Go.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(":/Go.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_3.setIcon(icon2)
         self.pushButton_3.setIconSize(QtCore.QSize(20, 20))
         self.pushButton_3.setDefault(False)
         self.pushButton_3.setFlat(True)
         self.pushButton_3.setObjectName("pushButton_3")
+        self.pushButton_3.clicked.connect(lambda :self.search(self.lineEdit.text()))
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 721, 21))
@@ -151,6 +175,8 @@ class Ui_MainWindow(object):
         self.menuEdit.addAction(self.actionZip)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuEdit.menuAction())
+        self.show_items()
+        self.recent_directories()
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -172,8 +198,6 @@ class Ui_MainWindow(object):
         self.treeWidget.setSortingEnabled(__sortingEnabled)
         self.label.setText(_translate("MainWindow", "File Manager "))
         self.lineEdit.setAccessibleName(_translate("MainWindow", "address bar"))
-        self.comboBox.setItemText(0, _translate("MainWindow", "shet"))
-        self.comboBox.setItemText(1, _translate("MainWindow", "goh"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.menuEdit.setTitle(_translate("MainWindow", "Edit"))
         self.actionOpen.setText(_translate("MainWindow", "open               Ctrl+O"))
@@ -187,7 +211,58 @@ class Ui_MainWindow(object):
         self.actionPaste.setText(_translate("MainWindow", "Paste       Crtl+V"))
         self.actionZip.setText(_translate("MainWindow", "Zip"))
 
-import Icons_rc
+    def search(self,searchin_object):
+        print(searchin_object)
+
+    def show_items(self):
+        i,j = 0,0
+        for Item in list_of_items_in_directory :
+            if j == 6 :
+                j = 0
+                i += 1
+            j += 1
+            self.item = QtWidgets.QPushButton(self.centralwidget)
+            self.item.setGeometry(QtCore.QRect(150 + j*80, 60 + i*80, 50, 50))
+            self.item.setText(Item)
+            icon2 = QtGui.QIcon()
+            icon2.addPixmap(QtGui.QPixmap(":/Go.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+            self.item.setIcon(icon2)
+            self.item.setIconSize(QtCore.QSize(40, 40))
+            self.item.setDefault(False)
+            self.item.setFlat(True)
+            self.item.setObjectName(Item)
+            self.item.clicked.connect(lambda: print("Opened",self.item.objectName()))
+            MainWindow.setCentralWidget(self.centralwidget)
+
+
+
+    def recent_directories(self):
+        for i,directory in enumerate(recent_directories_list[-5:]):
+            self.comboBox.addItem("")
+            self.comboBox.setItemText(i,directory)
+        print("FFF")
+
+    def Go_to_directory(self,addres):
+        recent_directories_list.append(addres)
+        directories.append(addres)
+        self.lineEdit.clear()
+        self.lineEdit.insert(addres)
+        print(addres)
+
+    def Back(self):
+        global pointer
+        if len(directories)>1:
+            self.Go_to_directory(directories[-2])
+            directories.pop()
+        else :
+            self.Go_to_directory(directories[-1])
+
+
+
+
+
+
+#import Icons_rc
 
 if __name__ == "__main__":
     import sys
