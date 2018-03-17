@@ -72,7 +72,7 @@ while True:
         print(Search(os.getcwd(), command[1:]))
     else:
         try:
-            new_path = dir_info[0] + '\\' + dir_info[int(command[0])][int(command[1:]) - 1]
+            new_path =os.path.join( dir_info[0] , dir_info[int(command[0])][int(command[1:]) - 1])
             if int(command[0]) == 1:
                 os.chdir(new_path)
             elif int(command[0]) == 2:
