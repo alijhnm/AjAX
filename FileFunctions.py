@@ -44,7 +44,7 @@ def Search(dir, file_or_dirname):
             for i in range(len(found)):
                 found_result = found[i].lower()
                 if searching_for in found_result:
-                    search_result.append(gen_result[0] + '\\' + found[i])
+                    search_result.append(os.path.join(gen_result[0], found[i]))
         except StopIteration:
             break
     if len(search_result) == 0:
