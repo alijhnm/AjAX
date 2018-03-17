@@ -9,12 +9,51 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 recent_directories_list = ["C:/Users","C:/Descktop"]
-directories = ["C:/Users","C:/Descktop","D","E","F","G"]
+directories = ["/home/ali/Desktop","/home/ali/Downloads","/home/ali/Music","E","F","G"]
 list_of_items_in_directory = ["ali","saeed","baby","jetli","ddd","qqq","tTT"]
 pointer = 0
 
 
 class Ui_MainWindow(object):
+
+
+    def __init__(self):
+        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.treeWidget = QtWidgets.QTreeWidget(self.centralwidget)
+        self.frame = QtWidgets.QFrame(self.centralwidget)
+        self.label = QtWidgets.QLabel(self.frame)
+        self.lineEdit = QtWidgets.QLineEdit(self.frame)
+        self.pushButton_2 = QtWidgets.QPushButton(self.frame)
+        self.pushButton_1 = QtWidgets.QPushButton(self.centralwidget)
+        self.comboBox = QtWidgets.QComboBox(self.frame)
+        self.scrollArea = QtWidgets.QScrollArea(self.centralwidget)
+        self.scrollAreaWidgetContents = QtWidgets.QWidget()
+        self.gridLayoutWidget = QtWidgets.QWidget(self.scrollAreaWidgetContents)
+        self.gridLayout_2 = QtWidgets.QGridLayout(self.gridLayoutWidget)
+        self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
+        self.menubar = QtWidgets.QMenuBar(MainWindow)
+        self.menuFile = QtWidgets.QMenu(self.menubar)
+        self.menuEdit = QtWidgets.QMenu(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        self.actionOpen = QtWidgets.QAction(MainWindow)
+        self.actionNew_file = QtWidgets.QAction(MainWindow)
+        self.actionQuit = QtWidgets.QAction(MainWindow)
+        self.actionCopy_Crtl_C = QtWidgets.QAction(MainWindow)
+        self.actionPaste_Ctrl_V = QtWidgets.QAction(MainWindow)
+        self.actionExit = QtWidgets.QAction(MainWindow)
+        self.actionCopy = QtWidgets.QAction(MainWindow)
+        self.actionCut = QtWidgets.QAction(MainWindow)
+        self.actionPaste = QtWidgets.QAction(MainWindow)
+        self.actionZip = QtWidgets.QAction(MainWindow)
+
+
+
+
+
+
+
+
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(721, 511)
@@ -22,11 +61,12 @@ class Ui_MainWindow(object):
         icon.addPixmap(QtGui.QPixmap("Title-icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         MainWindow.setToolButtonStyle(QtCore.Qt.ToolButtonTextOnly)
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
+
         self.centralwidget.setObjectName("centralwidget")
-        self.treeWidget = QtWidgets.QTreeWidget(self.centralwidget)
+
         self.treeWidget.setGeometry(QtCore.QRect(20, 50, 181, 401))
         self.treeWidget.setObjectName("treeWidget")
+
         item_0 = QtWidgets.QTreeWidgetItem(self.treeWidget)
         item_1 = QtWidgets.QTreeWidgetItem(item_0)
         item_1 = QtWidgets.QTreeWidgetItem(item_0)
@@ -35,13 +75,13 @@ class Ui_MainWindow(object):
         item_1 = QtWidgets.QTreeWidgetItem(item_0)
         item_0 = QtWidgets.QTreeWidgetItem(self.treeWidget)
         item_0 = QtWidgets.QTreeWidgetItem(self.treeWidget)
-        self.frame = QtWidgets.QFrame(self.centralwidget)
+
+
         self.frame.setGeometry(QtCore.QRect(0, 0, 671, 51))
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
-        self.label = QtWidgets.QLabel(self.frame)
-        self.label.setGeometry(QtCore.QRect(30, 0, 181, 51))
+
         font = QtGui.QFont()
         font.setFamily("Nueva Std Cond")
         font.setPointSize(18)
@@ -52,6 +92,8 @@ class Ui_MainWindow(object):
         font.setStrikeOut(False)
         font.setKerning(True)
         font.setStyleStrategy(QtGui.QFont.PreferAntialias)
+
+        self.label.setGeometry(QtCore.QRect(30, 0, 181, 51))
         self.label.setFont(font)
         self.label.setMouseTracking(True)
         self.label.setFrameShape(QtWidgets.QFrame.NoFrame)
@@ -59,18 +101,19 @@ class Ui_MainWindow(object):
         self.label.setTextFormat(QtCore.Qt.PlainText)
         self.label.setWordWrap(False)
         self.label.setObjectName("label")
-        self.lineEdit = QtWidgets.QLineEdit(self.frame)
+
         self.lineEdit.setGeometry(QtCore.QRect(250, 20, 370, 21))
         self.lineEdit.setStatusTip("")
         self.lineEdit.setWhatsThis("")
         self.lineEdit.setInputMethodHints(QtCore.Qt.ImhNone)
         self.lineEdit.setText("")
         self.lineEdit.setObjectName("lineEdit")
-        self.pushButton_2 = QtWidgets.QPushButton(self.frame)
-        self.pushButton_2.setGeometry(QtCore.QRect(220, 20, 21, 21))
-        self.pushButton_2.setText("B")
+
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap(":/Back.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+        self.pushButton_2.setGeometry(QtCore.QRect(220, 20, 21, 21))
+        self.pushButton_2.setText("B")
         self.pushButton_2.setIcon(icon1)
         self.pushButton_2.setIconSize(QtCore.QSize(20, 20))
         self.pushButton_2.setDefault(False)
@@ -78,29 +121,30 @@ class Ui_MainWindow(object):
         self.pushButton_2.setObjectName("pushButton_2")
         self.pushButton_2.clicked.connect(self.Back)
 
-        self.pushButton_1 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_1.setGeometry(QtCore.QRect(670, 20, 21, 21))
-        self.pushButton_1.setText("S")
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap(":/Go.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+        self.pushButton_1.setGeometry(QtCore.QRect(670, 20, 21, 21))
+        self.pushButton_1.setText("S")
         self.pushButton_1.setIcon(icon2)
         self.pushButton_1.setIconSize(QtCore.QSize(20, 20))
         self.pushButton_1.setDefault(False)
         self.pushButton_1.setFlat(True)
         self.pushButton_1.setObjectName("pushButton_3")
         self.pushButton_1.clicked.connect(lambda: self.search(self.lineEdit.text()))
+
         MainWindow.setCentralWidget(self.centralwidget)
 
 
-        self.comboBox = QtWidgets.QComboBox(self.frame)
         self.comboBox.setGeometry(QtCore.QRect(250, 20, 390, 20))
         self.comboBox.setObjectName("comboBox")
         self.comboBox.raise_()
         self.comboBox.activated.connect(lambda: self.Go_to_directory(self.comboBox.currentText()))
+
         self.label.raise_()
         self.lineEdit.raise_()
         self.pushButton_2.raise_()
-        self.scrollArea = QtWidgets.QScrollArea(self.centralwidget)
+
         self.scrollArea.setGeometry(QtCore.QRect(210, 50, 481, 401))
         self.scrollArea.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.scrollArea.setFrameShadow(QtWidgets.QFrame.Plain)
@@ -108,61 +152,65 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.scrollArea.setObjectName("scrollArea")
-        self.scrollAreaWidgetContents = QtWidgets.QWidget()
+
         self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 479, 399))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         #self.scrollArea.setWidget(QtWidgets.QPushButton(self.scrollAreaWidgetContents).setText("KF"))
         #self.scrollArea.setWidget(QtWidgets.QPushButton(self.scrollAreaWidgetContents).setText("LY"))
-        self.gridLayoutWidget = QtWidgets.QWidget(self.scrollAreaWidgetContents)
+
         self.gridLayoutWidget.setGeometry(QtCore.QRect(9, 10, 461, 381))
         self.gridLayoutWidget.setObjectName("gridLayoutWidget")
-        self.gridLayout_2 = QtWidgets.QGridLayout(self.gridLayoutWidget)
+
         self.gridLayout_2.setContentsMargins(0, 0, 0, 0)
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
-        self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_3.setGeometry(QtCore.QRect(650, 20, 21, 21))
-        self.pushButton_3.setText("Go")
+
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap(":/Go.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+        self.pushButton_3.setGeometry(QtCore.QRect(650, 20, 21, 21))
+        self.pushButton_3.setText("Go")
         self.pushButton_3.setIcon(icon2)
         self.pushButton_3.setIconSize(QtCore.QSize(20, 20))
         self.pushButton_3.setDefault(False)
         self.pushButton_3.setFlat(True)
         self.pushButton_3.setObjectName("pushButton_3")
         self.pushButton_3.clicked.connect(lambda :self.search(self.lineEdit.text()))
+
         MainWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QtWidgets.QMenuBar(MainWindow)
+
         self.menubar.setGeometry(QtCore.QRect(0, 0, 721, 21))
         self.menubar.setObjectName("menubar")
-        self.menuFile = QtWidgets.QMenu(self.menubar)
+
         self.menuFile.setObjectName("menuFile")
-        self.menuEdit = QtWidgets.QMenu(self.menubar)
+
         self.menuEdit.setObjectName("menuEdit")
+
         MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
+
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
-        self.actionOpen = QtWidgets.QAction(MainWindow)
+
         self.actionOpen.setObjectName("actionOpen")
-        self.actionNew_file = QtWidgets.QAction(MainWindow)
+
         self.actionNew_file.setObjectName("actionNew_file")
-        self.actionQuit = QtWidgets.QAction(MainWindow)
+
         self.actionQuit.setObjectName("actionQuit")
-        self.actionCopy_Crtl_C = QtWidgets.QAction(MainWindow)
+
         self.actionCopy_Crtl_C.setObjectName("actionCopy_Crtl_C")
-        self.actionPaste_Ctrl_V = QtWidgets.QAction(MainWindow)
+
         self.actionPaste_Ctrl_V.setObjectName("actionPaste_Ctrl_V")
-        self.actionExit = QtWidgets.QAction(MainWindow)
+
         self.actionExit.setObjectName("actionExit")
-        self.actionCopy = QtWidgets.QAction(MainWindow)
+
         self.actionCopy.setObjectName("actionCopy")
-        self.actionCut = QtWidgets.QAction(MainWindow)
+
         self.actionCut.setObjectName("actionCut")
-        self.actionPaste = QtWidgets.QAction(MainWindow)
+
         self.actionPaste.setObjectName("actionPaste")
-        self.actionZip = QtWidgets.QAction(MainWindow)
+
         self.actionZip.setObjectName("actionZip")
+
         self.menuFile.addAction(self.actionOpen)
         self.menuFile.addAction(self.actionNew_file)
         self.menuFile.addSeparator()
