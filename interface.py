@@ -7,6 +7,9 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import  os
+
+
 
 recent_directories_list = ["C:/Users","C:/Descktop"]
 directories = ["C:/Users","C:/Descktop","D","E","F","G"]
@@ -22,19 +25,21 @@ class Ui_MainWindow(object):
         icon.addPixmap(QtGui.QPixmap("Title-icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         MainWindow.setToolButtonStyle(QtCore.Qt.ToolButtonTextOnly)
+        #QTreeView
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.treeWidget = QtWidgets.QTreeWidget(self.centralwidget)
-        self.treeWidget.setGeometry(QtCore.QRect(20, 50, 181, 401))
-        self.treeWidget.setObjectName("treeWidget")
-        item_0 = QtWidgets.QTreeWidgetItem(self.treeWidget)
-        item_1 = QtWidgets.QTreeWidgetItem(item_0)
-        item_1 = QtWidgets.QTreeWidgetItem(item_0)
-        item_0 = QtWidgets.QTreeWidgetItem(self.treeWidget)
-        item_0 = QtWidgets.QTreeWidgetItem(self.treeWidget)
-        item_1 = QtWidgets.QTreeWidgetItem(item_0)
-        item_0 = QtWidgets.QTreeWidgetItem(self.treeWidget)
-        item_0 = QtWidgets.QTreeWidgetItem(self.treeWidget)
+        self.model=QtWidgets.QFileSystemModel()
+        self.model.setRootPath("")
+        self.tree_view=QtWidgets.QTreeView(self.centralwidget)
+        self.tree_view.setModel(self.model)
+        self.tree_view.setExpandsOnDoubleClick(False)
+        self.tree_view.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        self.tree_view.setAnimated(True)
+        self.tree_view.setSortingEnabled(True)
+        self.tree_view.setIndentation(20)
+        self.tree_view.mouseDoubleClickEvent=self.tree_double_click
+        self.tree_view.setGeometry(QtCore.QRect(20, 50, 181, 401))
+        self.tree_view.setObjectName("treeWidget")
         self.frame = QtWidgets.QFrame(self.centralwidget)
         self.frame.setGeometry(QtCore.QRect(0, 0, 671, 51))
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
@@ -175,27 +180,18 @@ class Ui_MainWindow(object):
         self.menuEdit.addAction(self.actionZip)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuEdit.menuAction())
+<<<<<<< HEAD
         self.show_items()
         self.recent_directories()
 
+=======
+>>>>>>> ec767eae0d2fa411f9d11874f2120d35273e9062
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "File Manager"))
-        self.treeWidget.headerItem().setText(0, _translate("MainWindow", "my drives"))
-        __sortingEnabled = self.treeWidget.isSortingEnabled()
-        self.treeWidget.setSortingEnabled(False)
-        self.treeWidget.topLevelItem(0).setText(0, _translate("MainWindow", "C"))
-        self.treeWidget.topLevelItem(0).child(0).setText(0, _translate("MainWindow", "progs"))
-        self.treeWidget.topLevelItem(0).child(1).setText(0, _translate("MainWindow", "shet"))
-        self.treeWidget.topLevelItem(1).setText(0, _translate("MainWindow", "D"))
-        self.treeWidget.topLevelItem(2).setText(0, _translate("MainWindow", "E"))
-        self.treeWidget.topLevelItem(2).child(0).setText(0, _translate("MainWindow", "sdc"))
-        self.treeWidget.topLevelItem(3).setText(0, _translate("MainWindow", "F"))
-        self.treeWidget.topLevelItem(4).setText(0, _translate("MainWindow", "G"))
-        self.treeWidget.setSortingEnabled(__sortingEnabled)
         self.label.setText(_translate("MainWindow", "File Manager "))
         self.lineEdit.setAccessibleName(_translate("MainWindow", "address bar"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
@@ -211,6 +207,7 @@ class Ui_MainWindow(object):
         self.actionPaste.setText(_translate("MainWindow", "Paste       Crtl+V"))
         self.actionZip.setText(_translate("MainWindow", "Zip"))
 
+<<<<<<< HEAD
     def search(self,searchin_object):
         print(searchin_object)
 
@@ -263,6 +260,15 @@ class Ui_MainWindow(object):
 
 
 #import Icons_rc
+=======
+    def tree_double_click(self,event):
+        if event.button()==QtCore.Qt.LeftButton :
+            try :
+                os.startfile(self.model.filePath(self.tree_view.currentIndex()))
+            except :
+                pass
+
+>>>>>>> ec767eae0d2fa411f9d11874f2120d35273e9062
 
 if __name__ == "__main__":
     import sys
