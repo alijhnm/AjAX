@@ -7,15 +7,13 @@ directories = []
 tup = next(os.walk('C:\\'))
 os.chdir('C:\\')
 list_of_item = []
-
+initial_list = [os.path.join(tup[0], i) for i in tup[1] + tup[2]]
 dragged_item = []
 
 class Ui_MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         super(Ui_MainWindow, self).__init__()
-
-initial_list = [os.path.join(tup[0], i) for i in tup[1] + tup[2]]
 
 
 class Ui_MainWindow(QtWidgets.QMainWindow):
@@ -231,7 +229,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
     #definingFunctions
 
     def show_items(self, lst):
-        print('Start of show_items',lst)
         global list_of_item
         for k in list_of_item:
             k.setParent(None)
@@ -247,9 +244,9 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             self.item.setText(Item)
             self.item.clicked.connect(self.selected_item)
             list_of_item.append(self.item)
-        print('Shown', list_of_item)
 
     def Search(self, dir, file_or_dirname):
+        """Searches for file_or_dir_name in directory and its subdirectories"""
         searching_for = file_or_dirname.lower()
         search_generator = os.walk(dir)
         search_result = []
@@ -264,16 +261,15 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             except StopIteration:
                 break
         self.show_items(search_result)
-        print('Searched')
 
     def OpenFile(self, file_path):
-        print(file_path)
+        """Opens a file at file_path. Works exactly as double clicking in windows"""
         if os.path.isfile(file_path):
             os.startfile(file_path)
-        else:
-            print('Jakesh')
 
     def go_button(self):
+        """Handles go button. If the path given to line edit is a dir shows dirs contents.
+        If it is a file, Opens the file"""
         path = self.lineEdit.text()
         if os.path.isfile(path):
             self.OpenFile(path)
@@ -284,55 +280,75 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                 pass
 
     def CopyFile(self, file_path, target_path):
+        """Copies the file file_path to the file or directory target_path.
+         File_path and target_path should be strings.
+         If file_path specifies a directory,the file will be copied into
+         target_path using the base filename from file_path"""
         shutil.copy2(file_path, target_path)
 
     def RenameFile(self, old_name, new_name):
+        """Renames file old_name to new_name. new_name and old_name are either names
+           at current working directory or full paths.
+           If new name is a directory at a different path file will not rename"""
         try:
             os.rename(old_name, new_name)
         except OSError:
-            print('File name already exists')
+            pass    #####ALIBEHROOZI
 
     def RemoveFile(self, file_path):
+        """Deletes file file_path"""
         os.remove(file_path)
 
     def RemoveDir(self, dir_path):
+        """Removes an entire directory"""
         shutil.rmtree(dir_path)
 
     def CutFile(self, file_path, target_path):
+        """Cuts a file from file_path and pastes it at target_path"""
         shutil.move(file_path, target_path)
 
     def MakeZip(self, dir, target_path, name):
+        """Compreses a dir at dir_path into a zip file and moves it to target_path"""
         tmp_dir = os.getcwd()
         os.chdir(target_path)
         shutil.make_archive(name, 'zip', dir, dir)
         os.chdir(tmp_dir)
 
-    def ExtractZip(archieve_path, extract_path):
+    def ExtractZip(self, archieve_path, extract_path):
+        """Extracts a zip file from archieve_path to extract_path"""
         shutil.unpack_archive(archieve_path, extract_path)
 
     def MakeDir(self, path=os.getcwd()):
+        """Makes a new directory at current working directory.
+           If path is provided,
+           the new directory will be created there"""
         os.mkdir(path)
 
-    def selected_item(self,event):
-        print(self.sender().text(),self.sender().isFlat())
+    def selected_item(self):
+        """DOC NEEDED"""
         dragged_item.append(self.sender())
         self.sender().setFlat(False)
         if len(dragged_item)>1:
             for i in dragged_item[0:-2]:
                 i.setFlat(True)
         if not self.sender().isFlat() :
-            print(self.sender().text(),4444444)
-            self.sender().clicked.connect(lambda :self.Go_to_directory(self.sender().text()))
-
-
+            path = self.sender().text()
+            if os.path.isfile(path):
+                func1 = lambda: self.OpenFile(path)
+                self.sender().clicked.connect(func1)
+            else:
+                func2 = lambda: self.Go_to_directory(path)
+                self.sender().clicked.connect(func2)
 
     def recent_directories(self):
+        """DOC NEEDED"""
         for i,directory in enumerate(recent_directories_list[-5:]):
             self.RecentAdrresses.addItem("")
             self.RecentAdrresses.setItemText(i,directory)
 
     def Go_to_directory(self,address):
-        print('Start of go_to_directory')
+        """Changes the current working directory to address.
+           Also makes necessary changes to files shown"""
         recent_directories_list.append(address)
         directories.append(address)
         self.lineEdit.clear()
@@ -342,37 +358,35 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         tup = next(gen)
         lst = [os.path.join(tup[0], i) for i in tup[1] + tup[2]]
         self.show_items(lst)
-        print('Returnd to go')
         del gen
-        print('Gone')
 
     def Back(self):
-        print('Starting back')
+        """Returns to parent directory of current working directory.
+           Also makes necessary changes to files shown and line_edit"""
         os.chdir(os.path.dirname(os.getcwd()))
-        print('1')
         gen = os.walk(os.getcwd())
         tup = next(gen)
         lst = [os.path.join(tup[0], i) for i in tup[1] + tup[2]]
-        print('2')
         del gen
         self.show_items(lst)
-        print('Got Back')
+        self.lineEdit.setText(os.getcwd())
 
 
     def tree_double_click(self,event):
-        #control the reaction of the items in TreeView after clicking on them
+        """Handle the event of clicking on the items of Treeview"""
         if event.button()==QtCore.Qt.LeftButton :
-            try :
-                if os.path.isfile(self.model.filePath(self.tree_view.currentIndex()))==True :
-                    os.startfile(self.model.filePath(self.tree_view.currentIndex()))
-                else :
+            try:
+                if os.path.isfile(self.model.filePath(self.tree_view.currentIndex())):
+                    self.OpenFile(self.model.filePath(self.tree_view.currentIndex()))
+                else:
                     if self.tree_view.isExpanded(self.tree_view.currentIndex()):
                         self.tree_view.collapse(self.tree_view.currentIndex())
-                    else :
+                    else:
                         self.tree_view.expand(self.tree_view.currentIndex())
                     self.Go_to_directory(self.model.filePath(self.tree_view.currentIndex()))
-            except :
+            except:
                 pass
+
 
 if __name__ == "__main__":
     import sys
@@ -382,7 +396,3 @@ if __name__ == "__main__":
     #ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
-
-
-
-
