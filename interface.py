@@ -1,60 +1,19 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'interface.ui'
-#
-# Created by: PyQt5 UI code generator 5.4.1
-#
-# WARNING! All changes made in this file will be lost!
-
 from PyQt5 import QtCore, QtGui, QtWidgets
+import os, shutil, os.path
 
-recent_directories_list = ["C:/Users","C:/Descktop"]
-directories = ["/home/ali/Desktop","/home/ali/Downloads","/home/ali/Music","E","F","G"]
-list_of_items_in_directory = ["ali","saeed","baby","jetli","ddd","qqq","tTT"]
-pointer = 0
-
-
-class Ui_MainWindow(object):
-
-
-    def __init__(self):
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
-        self.treeWidget = QtWidgets.QTreeWidget(self.centralwidget)
-        self.frame = QtWidgets.QFrame(self.centralwidget)
-        self.label = QtWidgets.QLabel(self.frame)
-        self.lineEdit = QtWidgets.QLineEdit(self.frame)
-        self.pushButton_2 = QtWidgets.QPushButton(self.frame)
-        self.pushButton_1 = QtWidgets.QPushButton(self.centralwidget)
-        self.comboBox = QtWidgets.QComboBox(self.frame)
-        self.scrollArea = QtWidgets.QScrollArea(self.centralwidget)
-        self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.gridLayoutWidget = QtWidgets.QWidget(self.scrollAreaWidgetContents)
-        self.gridLayout_2 = QtWidgets.QGridLayout(self.gridLayoutWidget)
-        self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
-        self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menuFile = QtWidgets.QMenu(self.menubar)
-        self.menuEdit = QtWidgets.QMenu(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
-        self.actionOpen = QtWidgets.QAction(MainWindow)
-        self.actionNew_file = QtWidgets.QAction(MainWindow)
-        self.actionQuit = QtWidgets.QAction(MainWindow)
-        self.actionCopy_Crtl_C = QtWidgets.QAction(MainWindow)
-        self.actionPaste_Ctrl_V = QtWidgets.QAction(MainWindow)
-        self.actionExit = QtWidgets.QAction(MainWindow)
-        self.actionCopy = QtWidgets.QAction(MainWindow)
-        self.actionCut = QtWidgets.QAction(MainWindow)
-        self.actionPaste = QtWidgets.QAction(MainWindow)
-        self.actionZip = QtWidgets.QAction(MainWindow)
+recent_directories_list = []
+directories = []
+tup = next(os.walk('D:\\Document'))
+os.chdir('D:\\Document')
+list_of_item = []
+initial_list = [os.path.join(tup[0], i) for i in tup[1] + tup[2]]
 
 
-
-
-
-
-
-
+class Ui_MainWindow():
 
     def setupUi(self, MainWindow):
+
+        #MainWindow
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(721, 511)
         icon = QtGui.QIcon()
@@ -62,26 +21,32 @@ class Ui_MainWindow(object):
         MainWindow.setWindowIcon(icon)
         MainWindow.setToolButtonStyle(QtCore.Qt.ToolButtonTextOnly)
 
+        #QTreeView
+        self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+        self.model=QtWidgets.QFileSystemModel()
+        self.model.setRootPath("")
+        self.tree_view=QtWidgets.QTreeView(self.centralwidget)
+        self.tree_view.setModel(self.model)
+        self.tree_view.setExpandsOnDoubleClick(False)
+        self.tree_view.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        self.tree_view.setAnimated(True)
+        self.tree_view.setSortingEnabled(True)
+        self.tree_view.setIndentation(20)
+        self.tree_view.mouseDoubleClickEvent=self.tree_double_click
+        self.tree_view.setGeometry(QtCore.QRect(20, 50, 181, 401))
+        self.tree_view.setObjectName("treeWidget")
 
-        self.treeWidget.setGeometry(QtCore.QRect(20, 50, 181, 401))
-        self.treeWidget.setObjectName("treeWidget")
-
-        item_0 = QtWidgets.QTreeWidgetItem(self.treeWidget)
-        item_1 = QtWidgets.QTreeWidgetItem(item_0)
-        item_1 = QtWidgets.QTreeWidgetItem(item_0)
-        item_0 = QtWidgets.QTreeWidgetItem(self.treeWidget)
-        item_0 = QtWidgets.QTreeWidgetItem(self.treeWidget)
-        item_1 = QtWidgets.QTreeWidgetItem(item_0)
-        item_0 = QtWidgets.QTreeWidgetItem(self.treeWidget)
-        item_0 = QtWidgets.QTreeWidgetItem(self.treeWidget)
-
-
+        #Frame
+        self.frame = QtWidgets.QFrame(self.centralwidget)
         self.frame.setGeometry(QtCore.QRect(0, 0, 671, 51))
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
 
+        #NameLabel
+        self.label = QtWidgets.QLabel(self.frame)
+        self.label.setGeometry(QtCore.QRect(30, 0, 181, 51))
         font = QtGui.QFont()
         font.setFamily("Nueva Std Cond")
         font.setPointSize(18)
@@ -92,125 +57,122 @@ class Ui_MainWindow(object):
         font.setStrikeOut(False)
         font.setKerning(True)
         font.setStyleStrategy(QtGui.QFont.PreferAntialias)
-
-        self.label.setGeometry(QtCore.QRect(30, 0, 181, 51))
         self.label.setFont(font)
         self.label.setMouseTracking(True)
         self.label.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.label.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.label.setTextFormat(QtCore.Qt.PlainText)
         self.label.setWordWrap(False)
-        self.label.setObjectName("label")
+        self.label.setObjectName("NameLabel")
 
+        # RecentAdrresses
+        self.RecentAdrresses = QtWidgets.QComboBox(self.frame)
+        self.RecentAdrresses.setGeometry(QtCore.QRect(250, 20, 390, 20))
+        self.RecentAdrresses.setObjectName("RecentAdrresses")
+        self.RecentAdrresses.raise_()
+        self.RecentAdrresses.activated.connect(lambda: self.Go_to_directory(self.RecentAdrresses.currentText()))
+        self.label.raise_()
+
+        #AdressBar
+        self.lineEdit = QtWidgets.QLineEdit(self.frame)
         self.lineEdit.setGeometry(QtCore.QRect(250, 20, 370, 21))
         self.lineEdit.setStatusTip("")
         self.lineEdit.setWhatsThis("")
         self.lineEdit.setInputMethodHints(QtCore.Qt.ImhNone)
         self.lineEdit.setText("")
         self.lineEdit.setObjectName("lineEdit")
+        self.lineEdit.raise_()
 
+        #BackButton
+        self.BackButton = QtWidgets.QPushButton(self.frame)
+        self.BackButton.setGeometry(QtCore.QRect(220, 20, 21, 21))
+        self.BackButton.setText("B")
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap(":/Back.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.BackButton.setIcon(icon1)
+        self.BackButton.setIconSize(QtCore.QSize(20, 20))
+        self.BackButton.setDefault(False)
+        self.BackButton.setFlat(True)
+        self.BackButton.setObjectName("BackButton")
+        self.BackButton.clicked.connect(self.Back)
+        self.BackButton.raise_()
 
-        self.pushButton_2.setGeometry(QtCore.QRect(220, 20, 21, 21))
-        self.pushButton_2.setText("B")
-        self.pushButton_2.setIcon(icon1)
-        self.pushButton_2.setIconSize(QtCore.QSize(20, 20))
-        self.pushButton_2.setDefault(False)
-        self.pushButton_2.setFlat(True)
-        self.pushButton_2.setObjectName("pushButton_2")
-        self.pushButton_2.clicked.connect(self.Back)
-
+        #SearchButton
+        self.SearchButton = QtWidgets.QPushButton(self.centralwidget)
+        self.SearchButton.setGeometry(QtCore.QRect(670, 20, 21, 21))
+        self.SearchButton.setText("S")
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap(":/Go.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-
-        self.pushButton_1.setGeometry(QtCore.QRect(670, 20, 21, 21))
-        self.pushButton_1.setText("S")
-        self.pushButton_1.setIcon(icon2)
-        self.pushButton_1.setIconSize(QtCore.QSize(20, 20))
-        self.pushButton_1.setDefault(False)
-        self.pushButton_1.setFlat(True)
-        self.pushButton_1.setObjectName("pushButton_3")
-        self.pushButton_1.clicked.connect(lambda: self.search(self.lineEdit.text()))
-
+        self.SearchButton.setIcon(icon2)
+        self.SearchButton.setIconSize(QtCore.QSize(20, 20))
+        self.SearchButton.setDefault(False)
+        self.SearchButton.setFlat(True)
+        self.SearchButton.setObjectName("SearchButton")
+        self.SearchButton.clicked.connect(lambda: self.Search(os.getcwd(), self.lineEdit.text()))
         MainWindow.setCentralWidget(self.centralwidget)
 
-
-        self.comboBox.setGeometry(QtCore.QRect(250, 20, 390, 20))
-        self.comboBox.setObjectName("comboBox")
-        self.comboBox.raise_()
-        self.comboBox.activated.connect(lambda: self.Go_to_directory(self.comboBox.currentText()))
-
-        self.label.raise_()
-        self.lineEdit.raise_()
-        self.pushButton_2.raise_()
-
+        #GoButton
+        self.GoButton = QtWidgets.QPushButton(self.centralwidget)
+        self.GoButton.setGeometry(QtCore.QRect(650, 20, 21, 21))
+        self.GoButton.setText("Go")
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap(":/Go.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.GoButton.setIcon(icon2)
+        self.GoButton.setIconSize(QtCore.QSize(20, 20))
+        self.GoButton.setDefault(False)
+        self.GoButton.setFlat(True)
+        self.GoButton.setObjectName("GoButton")
+        self.GoButton.clicked.connect(self.go_button)
+        # ScrollArea
+        self.scrollArea = QtWidgets.QScrollArea(self.centralwidget)
         self.scrollArea.setGeometry(QtCore.QRect(210, 50, 481, 401))
         self.scrollArea.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.scrollArea.setFrameShadow(QtWidgets.QFrame.Plain)
         self.scrollArea.setLineWidth(5)
         self.scrollArea.setWidgetResizable(True)
-        self.scrollArea.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.scrollArea.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
         self.scrollArea.setObjectName("scrollArea")
-
+        self.scrollAreaWidgetContents = QtWidgets.QWidget()
         self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 479, 399))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        #self.scrollArea.setWidget(QtWidgets.QPushButton(self.scrollAreaWidgetContents).setText("KF"))
-        #self.scrollArea.setWidget(QtWidgets.QPushButton(self.scrollAreaWidgetContents).setText("LY"))
-
-        self.gridLayoutWidget.setGeometry(QtCore.QRect(9, 10, 461, 381))
-        self.gridLayoutWidget.setObjectName("gridLayoutWidget")
-
-        self.gridLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.gridLayout_2.setObjectName("gridLayout_2")
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(":/Go.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        #GridLayout
+        self.formLayout = QtWidgets.QFormLayout(self.scrollAreaWidgetContents)
 
-        self.pushButton_3.setGeometry(QtCore.QRect(650, 20, 21, 21))
-        self.pushButton_3.setText("Go")
-        self.pushButton_3.setIcon(icon2)
-        self.pushButton_3.setIconSize(QtCore.QSize(20, 20))
-        self.pushButton_3.setDefault(False)
-        self.pushButton_3.setFlat(True)
-        self.pushButton_3.setObjectName("pushButton_3")
-        self.pushButton_3.clicked.connect(lambda :self.search(self.lineEdit.text()))
-
+        #Menu
         MainWindow.setCentralWidget(self.centralwidget)
-
+        self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 721, 21))
         self.menubar.setObjectName("menubar")
-
+        self.menuFile = QtWidgets.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
-
+        self.menuEdit = QtWidgets.QMenu(self.menubar)
         self.menuEdit.setObjectName("menuEdit")
-
         MainWindow.setMenuBar(self.menubar)
-
+        self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
-
+        self.actionOpen = QtWidgets.QAction(MainWindow)
         self.actionOpen.setObjectName("actionOpen")
-
+        self.actionNew_file = QtWidgets.QAction(MainWindow)
         self.actionNew_file.setObjectName("actionNew_file")
-
+        self.actionQuit = QtWidgets.QAction(MainWindow)
         self.actionQuit.setObjectName("actionQuit")
-
+        self.actionCopy_Crtl_C = QtWidgets.QAction(MainWindow)
         self.actionCopy_Crtl_C.setObjectName("actionCopy_Crtl_C")
-
+        self.actionPaste_Ctrl_V = QtWidgets.QAction(MainWindow)
         self.actionPaste_Ctrl_V.setObjectName("actionPaste_Ctrl_V")
-
+        self.actionExit = QtWidgets.QAction(MainWindow)
         self.actionExit.setObjectName("actionExit")
-
+        self.actionCopy = QtWidgets.QAction(MainWindow)
         self.actionCopy.setObjectName("actionCopy")
-
+        self.actionCut = QtWidgets.QAction(MainWindow)
         self.actionCut.setObjectName("actionCut")
-
+        self.actionPaste = QtWidgets.QAction(MainWindow)
         self.actionPaste.setObjectName("actionPaste")
-
+        self.actionZip = QtWidgets.QAction(MainWindow)
         self.actionZip.setObjectName("actionZip")
-
         self.menuFile.addAction(self.actionOpen)
         self.menuFile.addAction(self.actionNew_file)
         self.menuFile.addSeparator()
@@ -223,94 +185,162 @@ class Ui_MainWindow(object):
         self.menuEdit.addAction(self.actionZip)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuEdit.menuAction())
-        self.show_items()
-        self.recent_directories()
-
-        self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+        #CallFunctions
+        self.show_items(initial_list)
+        self.recent_directories()
+        self.retranslateUi(MainWindow)
+
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "File Manager"))
-        self.treeWidget.headerItem().setText(0, _translate("MainWindow", "my drives"))
-        __sortingEnabled = self.treeWidget.isSortingEnabled()
-        self.treeWidget.setSortingEnabled(False)
-        self.treeWidget.topLevelItem(0).setText(0, _translate("MainWindow", "C"))
-        self.treeWidget.topLevelItem(0).child(0).setText(0, _translate("MainWindow", "progs"))
-        self.treeWidget.topLevelItem(0).child(1).setText(0, _translate("MainWindow", "shet"))
-        self.treeWidget.topLevelItem(1).setText(0, _translate("MainWindow", "D"))
-        self.treeWidget.topLevelItem(2).setText(0, _translate("MainWindow", "E"))
-        self.treeWidget.topLevelItem(2).child(0).setText(0, _translate("MainWindow", "sdc"))
-        self.treeWidget.topLevelItem(3).setText(0, _translate("MainWindow", "F"))
-        self.treeWidget.topLevelItem(4).setText(0, _translate("MainWindow", "G"))
-        self.treeWidget.setSortingEnabled(__sortingEnabled)
         self.label.setText(_translate("MainWindow", "File Manager "))
         self.lineEdit.setAccessibleName(_translate("MainWindow", "address bar"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.menuEdit.setTitle(_translate("MainWindow", "Edit"))
         self.actionOpen.setText(_translate("MainWindow", "open               Ctrl+O"))
+        #self.actionOpen.clicked.connect(lambda :OpenFile("*","*"))
         self.actionNew_file.setText(_translate("MainWindow", "new file          Ctrl+N"))
+        #self.actionNew_file.clicked.connect(lambda: NewFile("*", "*"))
         self.actionQuit.setText(_translate("MainWindow", "Quit"))
+        #self.actionQuit.clicked.connect(lambda: Quit("*", "*"))
         self.actionCopy_Crtl_C.setText(_translate("MainWindow", "Copy              Crtl+C"))
+        #self.actionCopy_Crtl_C.clicked.connect(lambda: CopyFile("*", "*"))
         self.actionPaste_Ctrl_V.setText(_translate("MainWindow", "Paste              Ctrl+V"))
+        #self.actionPaste_Ctrl_V.clicked.connect(lambda: PasteFile("*", "*"))
         self.actionExit.setText(_translate("MainWindow", "Exit"))
+        #self.actionExit.clicked.connect(lambda: QuitFile("*", "*"))
         self.actionCopy.setText(_translate("MainWindow", "Copy       Crtl+C"))
         self.actionCut.setText(_translate("MainWindow", "Cut          Crtl+X"))
         self.actionPaste.setText(_translate("MainWindow", "Paste       Crtl+V"))
         self.actionZip.setText(_translate("MainWindow", "Zip"))
+        #self.actionZip.clicked.connect(lambda: ZipFile("*", "*"))
 
-    def search(self,searchin_object):
-        print(searchin_object)
+    #definingFunctions
 
-    def show_items(self):
-        i,j = 0,0
-        for Item in list_of_items_in_directory :
-            if j == 6 :
-                j = 0
-                i += 1
-            j += 1
-            self.item = QtWidgets.QPushButton(self.centralwidget)
-            self.item.setGeometry(QtCore.QRect(150 + j*80, 60 + i*80, 50, 50))
-            self.item.setText(Item)
-            icon2 = QtGui.QIcon()
-            icon2.addPixmap(QtGui.QPixmap(":/Go.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-            self.item.setIcon(icon2)
-            self.item.setIconSize(QtCore.QSize(40, 40))
-            self.item.setDefault(False)
-            self.item.setFlat(True)
-            self.item.setObjectName(Item)
-            self.item.clicked.connect(lambda: print("Opened",self.item.objectName()))
-            MainWindow.setCentralWidget(self.centralwidget)
+    def show_items(self, lst):
+        print('Start of show_items',lst)
+        global list_of_item
+        for k in list_of_item:
+            print('1')
+            k.setParent(None)
+        list_of_item = []
+        for j, Item in enumerate(lst):
+            item = QtWidgets.QPushButton(self.scrollAreaWidgetContents)
+            label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
+            label.setText(str(j))
+            label.setAlignment(QtCore.Qt.AlignCenter)
+            self.formLayout.setWidget(j, QtWidgets.QFormLayout.LabelRole, item)
+            self.formLayout.setWidget(j, QtWidgets.QFormLayout.FieldRole, label)
+            item.setText(Item)
+            item.setObjectName(Item)
+            list_of_item.append(item)
+        print('Shown', list_of_item)
 
+    def Search(self, dir, file_or_dirname):
+        searching_for = file_or_dirname.lower()
+        search_generator = os.walk(dir)
+        search_result = []
+        while True:
+            try:
+                gen_result = next(search_generator)
+                found = gen_result[1] + gen_result[2]
+                for i in range(len(found)):
+                    found_result = found[i].lower()
+                    if searching_for in found_result:
+                        search_result.append(os.path.join(gen_result[0], found[i]))
+            except StopIteration:
+                break
+        self.show_items(search_result)
+        print('Searched')
 
+    def OpenFile(self, file_path):
+        print(file_path)
+        if os.path.isfile(file_path):
+            os.startfile(file_path)
+        else:
+            print('Jakesh')
+
+    def go_button(self):
+        path = self.lineEdit.text()
+        if os.path.isfile(path):
+            self.OpenFile(path)
+        else:
+            try:
+                self.Go_to_directory('qwe',path)
+            except:
+                pass
+
+    def CopyFile(self, file_path, target_path):
+        shutil.copy2(file_path, target_path)
+
+    def RenameFile(self, old_name, new_name):
+        try:
+            os.rename(old_name, new_name)
+        except OSError:
+            print('File name already exists')
+
+    def RemoveFile(self, file_path):
+        os.remove(file_path)
+
+    def RemoveDir(self, dir_path):
+        shutil.rmtree(dir_path)
+
+    def CutFile(self, file_path, target_path):
+        shutil.move(file_path, target_path)
+
+    def MakeZip(self, dir, target_path, name):
+        tmp_dir = os.getcwd()
+        os.chdir(target_path)
+        shutil.make_archive(name, 'zip', dir, dir)
+        os.chdir(tmp_dir)
+
+    def ExtractZip(archieve_path, extract_path):
+        shutil.unpack_archive(archieve_path, extract_path)
+
+    def MakeDir(self, path=os.getcwd()):
+        os.mkdir(path)
 
     def recent_directories(self):
         for i,directory in enumerate(recent_directories_list[-5:]):
-            self.comboBox.addItem("")
-            self.comboBox.setItemText(i,directory)
-        print("FFF")
+            self.RecentAdrresses.addItem("")
+            self.RecentAdrresses.setItemText(i,directory)
 
-    def Go_to_directory(self,addres):
-        recent_directories_list.append(addres)
-        directories.append(addres)
+    def Go_to_directory(self,event,address):
+        print('Start of go_to_directory')
+        recent_directories_list.append(address)
+        directories.append(address)
         self.lineEdit.clear()
-        self.lineEdit.insert(addres)
-        print(addres)
+        self.lineEdit.insert(address)
+        os.chdir(address)
+        gen = os.walk(os.getcwd())
+        tup = next(gen)
+        lst = [os.path.join(tup[0], i) for i in tup[1] + tup[2]]
+        self.show_items(lst)
+        print('Returnd to go')
+        del gen
+        print('Gone')
 
     def Back(self):
-        global pointer
-        if len(directories)>1:
-            self.Go_to_directory(directories[-2])
-            directories.pop()
-        else :
-            self.Go_to_directory(directories[-1])
+        print('Starting back')
+        os.chdir(os.path.dirname(os.getcwd()))
+        print('1')
+        gen = os.walk(os.getcwd())
+        tup = next(gen)
+        lst = [os.path.join(tup[0], i) for i in tup[1] + tup[2]]
+        print('2')
+        del gen
+        self.show_items(lst)
+        print('Got Back')
 
-
-
-
-
-
-#import Icons_rc
+    def tree_double_click(self,event):
+        if event.button() == QtCore.Qt.LeftButton :
+            try:
+                os.startfile(self.model.filePath(self.tree_view.currentIndex()))
+            except:
+                pass
 
 if __name__ == "__main__":
     import sys
@@ -320,4 +350,3 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
-
