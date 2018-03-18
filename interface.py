@@ -8,16 +8,18 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 import os, shutil, os.path
+import time
 
 recent_directories_list = ["a","b","c","d"]
 directories = []
 list_of_items_in_directory = ["ali","saeed","baby","jetli","ddd","qqq"]
 list_of_item = []
-pointer = -1
+dragged_item = []
 
+class Ui_MainWindow(QtWidgets.QMainWindow):
 
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
+    def __init__(self):
+        super(Ui_MainWindow, self).__init__()
 
         #MainWindow
         MainWindow.setObjectName("MainWindow")
@@ -144,7 +146,7 @@ class Ui_MainWindow(object):
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
-        #GridLayout
+        #FormLayout
         self.formLayout = QtWidgets.QFormLayout(self.scrollAreaWidgetContents)
 
         #Menu
@@ -278,26 +280,36 @@ class Ui_MainWindow(object):
     def MakeDir(path=os.getcwd()):
         os.mkdir(path)
 
+    def selected_item(self,event):
+        dragged_item.append(self.sender())
+        if len(dragged_item)>1:
+            for i in list_of_item:
+                i.setFlat(True)
+        if not self.sender().isFlat :
+            self.sender().clicked.connect(lambda :self.Go_to_directory(self.sender().text()))
+        self.sender().setFlat(False)
+
     def show_items(self):
+        global Fuckin_dic,Fuckin_list
         for j,Item in enumerate(list_of_items_in_directory) :
-            item = QtWidgets.QPushButton(self.scrollAreaWidgetContents)
-            label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-            label.setText(str(j))
-            label.setAlignment(QtCore.Qt.AlignCenter)
-            self.formLayout.setWidget(j, QtWidgets.QFormLayout.LabelRole, item)
-            self.formLayout.setWidget(j, QtWidgets.QFormLayout.FieldRole, label)
-            item.setText(Item)
-            item.setObjectName(Item)
-            item.MouseDoubleClickEvent = self.Go_to_directory()
-            #item.clicked.connect(lambda :self.Go_to_directory(str(j)))
-            list_of_item.append(item)
+            self.item = QtWidgets.QPushButton(self.scrollAreaWidgetContents)
+            self.item.setFlat(True)
+            self.label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
+            self.label.setText(str(j))
+            self.label.setAlignment(QtCore.Qt.AlignCenter)
+            self.formLayout.setWidget(j, QtWidgets.QFormLayout.LabelRole, self.item)
+            self.formLayout.setWidget(j, QtWidgets.QFormLayout.FieldRole, self.label)
+            self.item.setText(Item)
+            self.item.clicked.connect(self.selected_item)
+            list_of_item.append(self.item)
+
 
     def recent_directories(self):
         for i,directory in enumerate(recent_directories_list[-5:]):
             self.RecentAdrresses.addItem("")
             self.RecentAdrresses.setItemText(i,directory)
 
-    def Go_to_directory(self,event,addres):
+    def Go_to_directory(self,addres):
         recent_directories_list.append(addres)
         directories.append(addres)
         self.lineEdit.clear()
@@ -312,6 +324,7 @@ class Ui_MainWindow(object):
         else:
             pass
 
+
     def tree_double_click(self,event):
         if event.button()==QtCore.Qt.LeftButton :
             try :
@@ -325,7 +338,8 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
+    #ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
+
 
