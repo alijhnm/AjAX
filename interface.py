@@ -4,24 +4,24 @@ import time
 
 recent_directories_list = []
 directories = []
-tup = next(os.walk('D:\\Document'))
-os.chdir('D:\\Document')
+tup = next(os.walk('C:\\'))
+os.chdir('C:\\')
 list_of_item = []
-<<<<<<< HEAD
+
 dragged_item = []
 
 class Ui_MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         super(Ui_MainWindow, self).__init__()
-=======
+
 initial_list = [os.path.join(tup[0], i) for i in tup[1] + tup[2]]
 
 
-class Ui_MainWindow():
+class Ui_MainWindow(QtWidgets.QMainWindow):
 
-    def setupUi(self, MainWindow):
->>>>>>> 75cfce7c6ce770c0d9e06e4e9c29d30ce5c87737
+    def __init__(self):
+        super(Ui_MainWindow, self).__init__()
 
         #MainWindow
         MainWindow.setObjectName("MainWindow")
@@ -234,19 +234,19 @@ class Ui_MainWindow():
         print('Start of show_items',lst)
         global list_of_item
         for k in list_of_item:
-            print('1')
             k.setParent(None)
         list_of_item = []
-        for j, Item in enumerate(lst):
-            item = QtWidgets.QPushButton(self.scrollAreaWidgetContents)
-            label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-            label.setText(str(j))
-            label.setAlignment(QtCore.Qt.AlignCenter)
-            self.formLayout.setWidget(j, QtWidgets.QFormLayout.LabelRole, item)
-            self.formLayout.setWidget(j, QtWidgets.QFormLayout.FieldRole, label)
-            item.setText(Item)
-            item.setObjectName(Item)
-            list_of_item.append(item)
+        for j,Item in enumerate(lst) :
+            self.item = QtWidgets.QPushButton(self.scrollAreaWidgetContents)
+            self.item.setFlat(True)
+            self.label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
+            self.label.setText(str(j))
+            self.label.setAlignment(QtCore.Qt.AlignCenter)
+            self.formLayout.setWidget(j, QtWidgets.QFormLayout.LabelRole, self.item)
+            self.formLayout.setWidget(j, QtWidgets.QFormLayout.FieldRole, self.label)
+            self.item.setText(Item)
+            self.item.clicked.connect(self.selected_item)
+            list_of_item.append(self.item)
         print('Shown', list_of_item)
 
     def Search(self, dir, file_or_dirname):
@@ -313,48 +313,28 @@ class Ui_MainWindow():
     def MakeDir(self, path=os.getcwd()):
         os.mkdir(path)
 
-<<<<<<< HEAD
     def selected_item(self,event):
+        print(self.sender().text(),self.sender().isFlat())
         dragged_item.append(self.sender())
-        if len(dragged_item)>1:
-            for i in list_of_item:
-                i.setFlat(True)
-        if not self.sender().isFlat :
-            self.sender().clicked.connect(lambda :self.Go_to_directory(self.sender().text()))
         self.sender().setFlat(False)
-
-    def show_items(self):
-        global Fuckin_dic,Fuckin_list
-        for j,Item in enumerate(list_of_items_in_directory) :
-            self.item = QtWidgets.QPushButton(self.scrollAreaWidgetContents)
-            self.item.setFlat(True)
-            self.label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-            self.label.setText(str(j))
-            self.label.setAlignment(QtCore.Qt.AlignCenter)
-            self.formLayout.setWidget(j, QtWidgets.QFormLayout.LabelRole, self.item)
-            self.formLayout.setWidget(j, QtWidgets.QFormLayout.FieldRole, self.label)
-            self.item.setText(Item)
-            self.item.clicked.connect(self.selected_item)
-            list_of_item.append(self.item)
+        if len(dragged_item)>1:
+            for i in dragged_item[0:-2]:
+                i.setFlat(True)
+        if not self.sender().isFlat() :
+            print(self.sender().text(),4444444)
+            self.sender().clicked.connect(lambda :self.Go_to_directory(self.sender().text()))
 
 
-=======
->>>>>>> 75cfce7c6ce770c0d9e06e4e9c29d30ce5c87737
+
     def recent_directories(self):
         for i,directory in enumerate(recent_directories_list[-5:]):
             self.RecentAdrresses.addItem("")
             self.RecentAdrresses.setItemText(i,directory)
 
-<<<<<<< HEAD
-    def Go_to_directory(self,addres):
-        recent_directories_list.append(addres)
-        directories.append(addres)
-=======
-    def Go_to_directory(self,event,address):
+    def Go_to_directory(self,address):
         print('Start of go_to_directory')
         recent_directories_list.append(address)
         directories.append(address)
->>>>>>> 75cfce7c6ce770c0d9e06e4e9c29d30ce5c87737
         self.lineEdit.clear()
         self.lineEdit.insert(address)
         os.chdir(address)
@@ -380,10 +360,18 @@ class Ui_MainWindow():
 
 
     def tree_double_click(self,event):
-        if event.button() == QtCore.Qt.LeftButton :
-            try:
-                os.startfile(self.model.filePath(self.tree_view.currentIndex()))
-            except:
+        #control the reaction of the items in TreeView after clicking on them
+        if event.button()==QtCore.Qt.LeftButton :
+            try :
+                if os.path.isfile(self.model.filePath(self.tree_view.currentIndex()))==True :
+                    os.startfile(self.model.filePath(self.tree_view.currentIndex()))
+                else :
+                    if self.tree_view.isExpanded(self.tree_view.currentIndex()):
+                        self.tree_view.collapse(self.tree_view.currentIndex())
+                    else :
+                        self.tree_view.expand(self.tree_view.currentIndex())
+                    self.Go_to_directory(self.model.filePath(self.tree_view.currentIndex()))
+            except :
                 pass
 
 if __name__ == "__main__":
@@ -394,8 +382,7 @@ if __name__ == "__main__":
     #ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
-<<<<<<< HEAD
 
 
-=======
->>>>>>> 75cfce7c6ce770c0d9e06e4e9c29d30ce5c87737
+
+
