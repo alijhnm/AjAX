@@ -1,22 +1,16 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'interface.ui'
-#
-# Created by: PyQt5 UI code generator 5.4.1
-#
-# WARNING! All changes made in this file will be lost!
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 import os, shutil, os.path
 
-recent_directories_list = ["a","b","c","d"]
+recent_directories_list = []
 directories = []
-list_of_items_in_directory = ["ali","saeed","baby","jetli","ddd","qqq"]
+tup = next(os.walk('D:\\Document'))
+os.chdir('D:\\Document')
 list_of_item = []
-pointer = -1
+initial_list = [os.path.join(tup[0], i) for i in tup[1] + tup[2]]
 
 
-class Ui_MainWindow(object):
+class Ui_MainWindow():
+
     def setupUi(self, MainWindow):
 
         #MainWindow
@@ -114,7 +108,7 @@ class Ui_MainWindow(object):
         self.SearchButton.setDefault(False)
         self.SearchButton.setFlat(True)
         self.SearchButton.setObjectName("SearchButton")
-        self.SearchButton.clicked.connect(lambda: self.Search(recent_directories_list[-1],self.lineEdit.text()))
+        self.SearchButton.clicked.connect(lambda: self.Search(os.getcwd(), self.lineEdit.text()))
         MainWindow.setCentralWidget(self.centralwidget)
 
         #GoButton
@@ -128,8 +122,7 @@ class Ui_MainWindow(object):
         self.GoButton.setDefault(False)
         self.GoButton.setFlat(True)
         self.GoButton.setObjectName("GoButton")
-        self.GoButton.clicked.connect(lambda :self.Go_to_directory(self.lineEdit.text()))
-
+        self.GoButton.clicked.connect(self.go_button)
         # ScrollArea
         self.scrollArea = QtWidgets.QScrollArea(self.centralwidget)
         self.scrollArea.setGeometry(QtCore.QRect(210, 50, 481, 401))
@@ -195,7 +188,7 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
         #CallFunctions
-        self.show_items()
+        self.show_items(initial_list)
         self.recent_directories()
         self.retranslateUi(MainWindow)
 
@@ -226,7 +219,27 @@ class Ui_MainWindow(object):
         #self.actionZip.clicked.connect(lambda: ZipFile("*", "*"))
 
     #definingFunctions
-    def Search(self,dir, file_or_dirname):
+
+    def show_items(self, lst):
+        print('Start of show_items',lst)
+        global list_of_item
+        for k in list_of_item:
+            print('1')
+            k.setParent(None)
+        list_of_item = []
+        for j, Item in enumerate(lst):
+            item = QtWidgets.QPushButton(self.scrollAreaWidgetContents)
+            label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
+            label.setText(str(j))
+            label.setAlignment(QtCore.Qt.AlignCenter)
+            self.formLayout.setWidget(j, QtWidgets.QFormLayout.LabelRole, item)
+            self.formLayout.setWidget(j, QtWidgets.QFormLayout.FieldRole, label)
+            item.setText(Item)
+            item.setObjectName(Item)
+            list_of_item.append(item)
+        print('Shown', list_of_item)
+
+    def Search(self, dir, file_or_dirname):
         searching_for = file_or_dirname.lower()
         search_generator = os.walk(dir)
         search_result = []
@@ -237,36 +250,48 @@ class Ui_MainWindow(object):
                 for i in range(len(found)):
                     found_result = found[i].lower()
                     if searching_for in found_result:
-                        search_result.append(gen_result[0] + '\\' + found[i])
+                        search_result.append(os.path.join(gen_result[0], found[i]))
             except StopIteration:
                 break
-        if len(search_result) == 0:
-            return 'No results found'
+        self.show_items(search_result)
+        print('Searched')
+
+    def OpenFile(self, file_path):
+        print(file_path)
+        if os.path.isfile(file_path):
+            os.startfile(file_path)
         else:
-            return search_result
+            print('Jakesh')
 
-    def OpenFile(file_path):
-        os.startfile(file_path)
+    def go_button(self):
+        path = self.lineEdit.text()
+        if os.path.isfile(path):
+            self.OpenFile(path)
+        else:
+            try:
+                self.Go_to_directory('qwe',path)
+            except:
+                pass
 
-    def CopyFile(file_path, target_path):
+    def CopyFile(self, file_path, target_path):
         shutil.copy2(file_path, target_path)
 
-    def RenameFile(old_name, new_name):
+    def RenameFile(self, old_name, new_name):
         try:
             os.rename(old_name, new_name)
         except OSError:
             print('File name already exists')
 
-    def RemoveFile(file_path):
+    def RemoveFile(self, file_path):
         os.remove(file_path)
 
-    def RemoveDir(dir_path):
+    def RemoveDir(self, dir_path):
         shutil.rmtree(dir_path)
 
-    def CutFile(file_path, target_path):
+    def CutFile(self, file_path, target_path):
         shutil.move(file_path, target_path)
 
-    def MakeZip(dir, target_path, name):
+    def MakeZip(self, dir, target_path, name):
         tmp_dir = os.getcwd()
         os.chdir(target_path)
         shutil.make_archive(name, 'zip', dir, dir)
@@ -275,50 +300,47 @@ class Ui_MainWindow(object):
     def ExtractZip(archieve_path, extract_path):
         shutil.unpack_archive(archieve_path, extract_path)
 
-    def MakeDir(path=os.getcwd()):
+    def MakeDir(self, path=os.getcwd()):
         os.mkdir(path)
-
-    def show_items(self):
-        for j,Item in enumerate(list_of_items_in_directory) :
-            item = QtWidgets.QPushButton(self.scrollAreaWidgetContents)
-            label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-            label.setText(str(j))
-            label.setAlignment(QtCore.Qt.AlignCenter)
-            self.formLayout.setWidget(j, QtWidgets.QFormLayout.LabelRole, item)
-            self.formLayout.setWidget(j, QtWidgets.QFormLayout.FieldRole, label)
-            item.setText(Item)
-            item.setObjectName(Item)
-            item.MouseDoubleClickEvent = self.Go_to_directory()
-            #item.clicked.connect(lambda :self.Go_to_directory(str(j)))
-            list_of_item.append(item)
 
     def recent_directories(self):
         for i,directory in enumerate(recent_directories_list[-5:]):
             self.RecentAdrresses.addItem("")
             self.RecentAdrresses.setItemText(i,directory)
 
-    def Go_to_directory(self,event,addres):
-        recent_directories_list.append(addres)
-        directories.append(addres)
+    def Go_to_directory(self,event,address):
+        print('Start of go_to_directory')
+        recent_directories_list.append(address)
+        directories.append(address)
         self.lineEdit.clear()
-        self.lineEdit.insert(addres)
-        print(addres)
+        self.lineEdit.insert(address)
+        os.chdir(address)
+        gen = os.walk(os.getcwd())
+        tup = next(gen)
+        lst = [os.path.join(tup[0], i) for i in tup[1] + tup[2]]
+        self.show_items(lst)
+        print('Returnd to go')
+        del gen
+        print('Gone')
 
     def Back(self):
-        if len(directories)>1:
-            directories.pop()
-            self.Go_to_directory(directories[-1])
-            directories.pop()
-        else:
-            pass
+        print('Starting back')
+        os.chdir(os.path.dirname(os.getcwd()))
+        print('1')
+        gen = os.walk(os.getcwd())
+        tup = next(gen)
+        lst = [os.path.join(tup[0], i) for i in tup[1] + tup[2]]
+        print('2')
+        del gen
+        self.show_items(lst)
+        print('Got Back')
 
     def tree_double_click(self,event):
-        if event.button()==QtCore.Qt.LeftButton :
-            try :
+        if event.button() == QtCore.Qt.LeftButton :
+            try:
                 os.startfile(self.model.filePath(self.tree_view.currentIndex()))
-            except :
+            except:
                 pass
-
 
 if __name__ == "__main__":
     import sys
@@ -328,4 +350,3 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
-
