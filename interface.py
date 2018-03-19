@@ -36,7 +36,7 @@ Pasvand_dic = {"Music":[".PCM",".WAV",".SND",".WMA",".FLAC",".MP3",".AAC",".WMA"
                "Copressed":[".ZIP",".RAR"]}
 
 
-os.chdir('/home/ali')
+os.chdir('C:\\')
 initial_list = [os.path.join(tup[0], i) for i in tup[1] + tup[2]]
 selected_file=None
 selected_file_to_copy=None
@@ -205,8 +205,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         MainWindow.setStatusBar(self.statusbar)
         self.actionOpen = QtWidgets.QAction(MainWindow)
         self.actionOpen.setObjectName("actionOpen")
-        self.actionNew_file = QtWidgets.QAction(MainWindow)
-        self.actionNew_file.setObjectName("actionNew_file")
         self.actionQuit = QtWidgets.QAction(MainWindow)
         self.actionQuit.setObjectName("actionQuit")
         self.actionCopy_Crtl_C = QtWidgets.QAction(MainWindow)
@@ -224,7 +222,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.actionZip = QtWidgets.QAction(MainWindow)
         self.actionZip.setObjectName("actionZip")
         self.menuFile.addAction(self.actionOpen)
-        self.menuFile.addAction(self.actionNew_file)
         self.menuFile.addSeparator()
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionExit)
@@ -237,8 +234,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.menubar.addAction(self.menuEdit.menuAction())
         self.actionOpen.setShortcut('Ctrl+O')
         self.actionOpen.triggered.connect(self.action_open)
-        self.actionNew_file.setShortcut("Ctrl+N")
-        self.actionNew_file.triggered.connect(self.action_newfile)
         self.actionQuit.setShortcut('Ctrl+Q')
         self.actionQuit.triggered.connect(self.action_quit)
         self.actionExit.setShortcut("Ctrl+E")
@@ -269,7 +264,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.menuEdit.setTitle(_translate("MainWindow", "Edit"))
         self.actionOpen.setText(_translate("MainWindow", "open"))
         #self.actionOpen.clicked.connect(lambda :OpenFile("*","*"))
-        self.actionNew_file.setText(_translate("MainWindow", "new file"))
         #self.actionNew_file.clicked.connect(lambda: NewFile("*", "*"))
         self.actionQuit.setText(_translate("MainWindow", "Quit"))
         #self.actionQuit.clicked.connect(lambda: Quit("*", "*"))
@@ -405,6 +399,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
 
     def Search(self, dir, file_or_dirname):
         """Searches for file_or_dir_name in directory and its subdirectories"""
+        global selected_file_to_paste
+        selected_file_to_paste=None
         searching_for = file_or_dirname.lower()
         search_generator = os.walk(dir)
         search_result = []
@@ -507,14 +503,15 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
 
     def selected_item(self,event):
         global selected_file, selected_file_to_paste
+
         if not self.sender().isFlat() :
             self.CheckFileExe(self.sender().text())
         """DOC NEEDED"""
         dragged_item.append(self.sender())
-        self.sender().setFlat(False)
-        selected_file = self.sender().text()
+        selected_file = self.sender().objectName()
         if not os.path.isfile(selected_file):
             selected_file_to_paste = selected_file
+        self.sender().setFlat(False)
         if len(dragged_item)>1:
                 dragged_item[-2].setFlat(True)
 
@@ -531,6 +528,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         """Changes the current working directory to address.
            Also makes necessary changes to files shown"""
         global selected_file,selected_file_to_paste
+        if not os.path.isfile(address):
+            selected_file_to_paste = address
         recent_directories_list.append(address)
         directories.append(address)
         selected_file=None
@@ -547,6 +546,9 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
     def Back(self):
         """Returns to parent directory of current working directory.
            Also makes necessary changes to files shown and line_edit"""
+        global selected_file_to_paste
+        if not os.path.isfile(os.path.dirname(os.getcwd())):
+            selected_file_to_paste = os.path.dirname(os.getcwd())
         os.chdir(os.path.dirname(os.getcwd()))
         gen = os.walk(os.getcwd())
         tup = next(gen)
@@ -579,13 +581,11 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             except:
                 pass
 
-
+    # functions for the menu actions such open , copy , cut , paste
     def action_open(self):
         if selected_file != None:
             os.startfile(selected_file)
 
-    def action_newfile(self):
-        print(654654321987)
 
     def action_quit(self):
         MainWindow.close()
@@ -606,15 +606,23 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             selected_file_to_copy = None
 
     def action_paste(self):
+        print(selected_file_to_paste,selected_file_to_copy)
         if selected_file_to_paste != None:
             if selected_file_to_copy != None:
-                self.CopyFile(selected_file_to_copy, selected_file_to_paste)
+                try:
+                    self.CopyFile(selected_file_to_copy, selected_file_to_paste)
+                except:
+                    pass
             if selected_file_to_cut != None:
-                self.CutFile(selected_file_to_cut, selected_file_to_paste)
+                try:
+                    self.CutFile(selected_file_to_cut, selected_file_to_paste)
+                except:
+                    pass
 
     def action_zip(self):
         if selected_file != None:
-            self.MakeZip(selected_file, selected_file, selected_file)
+            if not os.path.isfile(selected_file):
+                self.MakeZip(selected_file, selected_file, selected_file)
 
 
 if __name__ == "__main__":
