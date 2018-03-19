@@ -1,12 +1,12 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import os, shutil, os.path
 
-<<<<<<< HEAD
+
 project_dir = os.getcwd()
 NotFoldersList = None
-recent_directories_list = ['C:\\']
-directories = ['C:\\']
-tup = next(os.walk('C:\\'))
+recent_directories_list = ['/home/ali']
+directories = ['/home/ali']
+tup = next(os.walk('/home/ali'))
 list_of_item = []
 list_of_labels = []
 dragged_item = []
@@ -16,24 +16,13 @@ Pasvand_dic = {"Music":[".PCM",".WAV",".SND",".WMA",".FLAC",".MP3",".AAC",".WMA"
                "Docs":[".DOC",".DOCX",".LOG",".MSG",".RTF",".TXT",".WPD",".WPS"],\
                "Copressed":[".ZIP",".RAR"]}
 
-=======
-recent_directories_list = []
-directories = []
-tup = next(os.walk('/home/ali'))
+
 os.chdir('/home/ali')
-list_of_item = []
 initial_list = [os.path.join(tup[0], i) for i in tup[1] + tup[2]]
-dragged_item = []
 selected_file=None
 selected_file_to_copy=None
 selected_file_to_cut=None
 selected_file_to_paste=None
->>>>>>> df97b7b8decafd80d6d6edb2a0f7ab8558cf7c82
-
-class Ui_MainWindow(QtWidgets.QMainWindow):
-
-    def __init__(self):
-        super(Ui_MainWindow, self).__init__()
 
 
 class Ui_MainWindow(QtWidgets.QMainWindow):
@@ -118,7 +107,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.BackButton.setGeometry(QtCore.QRect(207, 16, 30, 30))
         #self.BackButton.setText("B")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(project_dir+"\Icons\Back.png"))
+        icon1.addPixmap(QtGui.QPixmap(project_dir+"/Icons/Back.png"))
         self.BackButton.setIcon(icon1)
         self.BackButton.setIconSize(QtCore.QSize(20, 15))
         self.BackButton.setDefault(False)
@@ -132,7 +121,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.SearchButton.setGeometry(QtCore.QRect(670, 20, 22, 22))
         #self.SearchButton.setText("")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(project_dir+"\Icons\Search.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(project_dir+"/Icons/Search.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.SearchButton.setIcon(icon2)
         self.SearchButton.setIconSize(QtCore.QSize(22, 22))
         self.SearchButton.setDefault(False)
@@ -146,7 +135,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.GoButton.setGeometry(QtCore.QRect(640, 20, 22, 22))
         #self.GoButton.setText("Go")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(project_dir+"\Icons\Go.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(project_dir+"/Icons/Go.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.GoButton.setIcon(icon2)
         self.GoButton.setIconSize(QtCore.QSize(20, 20))
         self.GoButton.setDefault(False)
@@ -166,6 +155,18 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 479, 399))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+
+        # contextMenu Policy
+        self.scrollArea.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.scrollArea.customContextMenuRequested.connect(self.show_context)
+        # setting menu actions
+        self.popupMenu = QtWidgets.QMenu(self)
+        self.popupMenu.addAction(QtWidgets.QAction('New Folder', self, triggered=self.MakeDir))
+        self.popupMenu.addAction(QtWidgets.QAction('Copy', self, triggered=self.copyact))
+        self.popupMenu.addAction(QtWidgets.QAction('Cut', self, triggered=self.cutact))
+        self.popupMenu.addSeparator()
+        self.popupMenu.addAction(QtWidgets.QAction('test1', self, triggered=self.func1))
+        self.popupMenu.addAction(QtWidgets.QAction('test2', self, triggered=self.func2))
 
         #FormLayout
         self.formLayout = QtWidgets.QFormLayout(self.scrollAreaWidgetContents)
@@ -268,11 +269,11 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
     #definingFunctions
 
     def show_items(self, lst):
-<<<<<<< HEAD
+
         global list_of_item,list_of_labels
-=======
+
         global list_of_item
->>>>>>> df97b7b8decafd80d6d6edb2a0f7ab8558cf7c82
+
         for k in list_of_item:
             k.setParent(None)
         for i in list_of_labels:
@@ -294,20 +295,9 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             self.Show_Icons()
             self.item.clicked.connect(self.selected_item)
 
-            # contextMenu Policy
-            self.item.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-            self.item.customContextMenuRequested.connect(self.show_context)
-            # setting menu actions
-            self.popupMenu = QtWidgets.QMenu(self)
-            self.popupMenu.addAction(QtWidgets.QAction('New Folder', self, triggered=self.newact))
-            self.popupMenu.addAction(QtWidgets.QAction('Copy', self, triggered=self.copyact))
-            self.popupMenu.addAction(QtWidgets.QAction('Cut', self, triggered=self.cutact))
-            self.popupMenu.addSeparator()
-            self.popupMenu.addAction(QtWidgets.QAction('test1', self, triggered=self.func1))
-            self.popupMenu.addAction(QtWidgets.QAction('test2', self, triggered=self.func2))
 
             list_of_item.append(self.item)
-<<<<<<< HEAD
+
             list_of_labels.append(self.Label)
 
 
@@ -356,7 +346,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             self.item.setIcon(Icon)
             self.item.setIconSize(QtCore.QSize(50, 50))
 
-=======
+
 
         # defining func1 action
 
@@ -370,7 +360,10 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
 
             # defining newfolder action
 
-    def newact(self):
+    def newact(self ) : #, filename = 'New Folder'):
+        os.mkdir(os.path.join(os.getcwd() , 'New Folder'))
+        self.show()
+
         print('NewFolder act done')
 
             # defining copy action
@@ -386,8 +379,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             # showing context menu
 
     def show_context(self, event):
-        self.popupMenu.exec_(self.mapToGlobal(event))
->>>>>>> df97b7b8decafd80d6d6edb2a0f7ab8558cf7c82
+        self.popupMenu.exec_(self.scrollArea.mapToGlobal(QtCore.QPoint(event)))
+
 
     def Search(self, dir, file_or_dirname):
         """Searches for file_or_dir_name in directory and its subdirectories"""
@@ -407,16 +400,13 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.show_items(search_result)
 
     def OpenFile(self, file_path):
-<<<<<<< HEAD
         if os.path.isfile(file_path):
             os.startfile(file_path)
         else:
             pass
-=======
         """Opens a file at file_path. Works exactly as double clicking in windows"""
         if os.path.isfile(file_path):
             os.startfile(file_path)
->>>>>>> df97b7b8decafd80d6d6edb2a0f7ab8558cf7c82
 
     def go_button(self):
         """Handles go button. If the path given to line edit is a dir shows dirs contents.
@@ -444,12 +434,9 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         try:
             os.rename(old_name, new_name)
         except OSError:
-<<<<<<< HEAD
             pass
-=======
             pass    #####ALIBEHROOZI
 
->>>>>>> df97b7b8decafd80d6d6edb2a0f7ab8558cf7c82
     def RemoveFile(self, file_path):
         """Deletes file file_path"""
         os.remove(file_path)
@@ -473,61 +460,56 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         """Extracts a zip file from archieve_path to extract_path"""
         shutil.unpack_archive(archieve_path, extract_path)
 
-    def MakeDir(self, path=os.getcwd()):
-        """Makes a new directory at current working directory.
-           If path is provided,
-           the new directory will be created there"""
-        os.mkdir(path)
 
-<<<<<<< HEAD
+
+    def MakeDir(self ):
+        """Makes a new directory at current working directory. If path is provided,
+         the new directory will be created there"""
+        new_dir_path = os.path.join(os.getcwd(), 'New Folder')
+        temp = 1
+        while True:
+            try:
+                os.mkdir(new_dir_path)
+                break
+            except FileExistsError:
+                if temp > 1:
+                    new_dir_path = new_dir_path[:-1]
+                new_dir_path += str(temp)
+                temp += 1
+        gen = os.walk(os.getcwd())
+        tup = next(gen)
+        lst = [os.path.join(tup[0], i) for i in tup[1] + tup[2]]
+        del gen
+        self.show_items(lst)
+        del temp
+        del new_dir_path
+
     def selected_item(self,event):
+        global selected_file, selected_file_to_paste
         if not self.sender().isFlat() :
             self.CheckFileExe(self.sender().text())
-=======
-    def selected_item(self):
         """DOC NEEDED"""
-        global selected_file,selected_file_to_paste
->>>>>>> df97b7b8decafd80d6d6edb2a0f7ab8558cf7c82
         dragged_item.append(self.sender())
         self.sender().setFlat(False)
         selected_file = self.sender().text()
         if not os.path.isfile(selected_file):
             selected_file_to_paste = selected_file
         if len(dragged_item)>1:
-<<<<<<< HEAD
                 dragged_item[-2].setFlat(True)
 
     def recent_directories(self):
+        """DOC"""
         recent_directories_list_reversed = recent_directories_list[-5:]
         recent_directories_list_reversed.reverse()
         for i,directory in enumerate(recent_directories_list_reversed):
             self.RecentAdrresses.addItem('')
             self.RecentAdrresses.setItemText(i,directory)
 
-    def Go_to_directory(self,address):
-=======
-            for i in dragged_item[0:-2]:
-                i.setFlat(True)
-        if not self.sender().isFlat() :
-            path = self.sender().text()
-            if os.path.isfile(path):
-                func1 = lambda: self.OpenFile(path)
-                self.sender().clicked.connect(func1)
-            else:
-                func2 = lambda: self.Go_to_directory(path)
-                self.sender().clicked.connect(func2)
-
-    def recent_directories(self):
-        """DOC NEEDED"""
-        for i,directory in enumerate(recent_directories_list[-5:]):
-            self.RecentAdrresses.addItem("")
-            self.RecentAdrresses.setItemText(i,directory)
 
     def Go_to_directory(self,address):
         """Changes the current working directory to address.
            Also makes necessary changes to files shown"""
         global selected_file,selected_file_to_paste
->>>>>>> df97b7b8decafd80d6d6edb2a0f7ab8558cf7c82
         recent_directories_list.append(address)
         directories.append(address)
         selected_file=None
@@ -539,32 +521,24 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         lst = [os.path.join(tup[0], i) for i in tup[1] + tup[2]]
         self.show_items(lst)
         del gen
-<<<<<<< HEAD
         self.recent_directories()
-
-    def Back(self):
-=======
 
     def Back(self):
         """Returns to parent directory of current working directory.
            Also makes necessary changes to files shown and line_edit"""
->>>>>>> df97b7b8decafd80d6d6edb2a0f7ab8558cf7c82
         os.chdir(os.path.dirname(os.getcwd()))
         gen = os.walk(os.getcwd())
         tup = next(gen)
         lst = [os.path.join(tup[0], i) for i in tup[1] + tup[2]]
         del gen
         self.show_items(lst)
-<<<<<<< HEAD
 
     def CheckFileExe(self,path):
         if os.path.isfile(path):
            self.OpenFile(path)
         else:
             self.Go_to_directory(path)
-=======
         self.lineEdit.setText(os.getcwd())
->>>>>>> df97b7b8decafd80d6d6edb2a0f7ab8558cf7c82
 
 
     def tree_double_click(self,event):
@@ -584,9 +558,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             except:
                 pass
 
-<<<<<<< HEAD
-import Icons_rc
-=======
+
     def action_open(self):
         if selected_file != None:
             os.startfile(selected_file)
@@ -623,7 +595,6 @@ import Icons_rc
         if selected_file != None:
             self.MakeZip(selected_file, selected_file, selected_file)
 
->>>>>>> df97b7b8decafd80d6d6edb2a0f7ab8558cf7c82
 
 if __name__ == "__main__":
     import sys
