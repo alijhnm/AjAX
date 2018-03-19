@@ -1,14 +1,20 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import os, shutil, os.path
-import time
 
-recent_directories_list = []
-directories = []
+project_dir = os.getcwd()
+NotFoldersList = None
+recent_directories_list = ['C:\\']
+directories = ['C:\\']
 tup = next(os.walk('C:\\'))
-os.chdir('C:\\')
 list_of_item = []
-
+list_of_labels = []
 dragged_item = []
+Pasvand_dic = {"Music":[".PCM",".WAV",".SND",".WMA",".FLAC",".MP3",".AAC",".WMA",".OGG"],\
+               "Film":[".MKV",".MP4",".MPG",".AVI",".3GP",".MOV",".VOB",".FLV",".WMV",".GIF"],\
+               "Picture":[".JPG",".JPEG",".PNG",".GIF",".BMP"],\
+               "Docs":[".DOC",".DOCX",".LOG",".MSG",".RTF",".TXT",".WPD",".WPS"],\
+               "Copressed":[".ZIP",".RAR"]}
+
 
 class Ui_MainWindow(QtWidgets.QMainWindow):
 
@@ -25,9 +31,10 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
 
         #MainWindow
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(721, 511)
+        MainWindow.resize(700, 500)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("Title-icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        print(os.getcwd())
+        icon.addPixmap(QtGui.QPixmap(project_dir+"\Icons\Title-icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         MainWindow.setToolButtonStyle(QtCore.Qt.ToolButtonTextOnly)
 
@@ -59,7 +66,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.label.setGeometry(QtCore.QRect(30, 0, 181, 51))
         font = QtGui.QFont()
         font.setFamily("Nueva Std Cond")
-        font.setPointSize(18)
+        font.setPointSize(24)
         font.setBold(True)
         font.setItalic(False)
         font.setUnderline(False)
@@ -74,18 +81,19 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.label.setTextFormat(QtCore.Qt.PlainText)
         self.label.setWordWrap(False)
         self.label.setObjectName("NameLabel")
+        self.label.raise_()
 
         # RecentAdrresses
         self.RecentAdrresses = QtWidgets.QComboBox(self.frame)
-        self.RecentAdrresses.setGeometry(QtCore.QRect(250, 20, 390, 20))
+        self.RecentAdrresses.setGeometry(QtCore.QRect(240, 20, 390, 20))
         self.RecentAdrresses.setObjectName("RecentAdrresses")
         self.RecentAdrresses.raise_()
         self.RecentAdrresses.activated.connect(lambda: self.Go_to_directory(self.RecentAdrresses.currentText()))
-        self.label.raise_()
+
 
         #AdressBar
         self.lineEdit = QtWidgets.QLineEdit(self.frame)
-        self.lineEdit.setGeometry(QtCore.QRect(250, 20, 370, 21))
+        self.lineEdit.setGeometry(QtCore.QRect(240, 20, 370, 21))
         self.lineEdit.setStatusTip("")
         self.lineEdit.setWhatsThis("")
         self.lineEdit.setInputMethodHints(QtCore.Qt.ImhNone)
@@ -95,12 +103,12 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
 
         #BackButton
         self.BackButton = QtWidgets.QPushButton(self.frame)
-        self.BackButton.setGeometry(QtCore.QRect(220, 20, 21, 21))
-        self.BackButton.setText("B")
+        self.BackButton.setGeometry(QtCore.QRect(207, 16, 30, 30))
+        #self.BackButton.setText("B")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/Back.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(project_dir+"\Icons\Back.png"))
         self.BackButton.setIcon(icon1)
-        self.BackButton.setIconSize(QtCore.QSize(20, 20))
+        self.BackButton.setIconSize(QtCore.QSize(20, 15))
         self.BackButton.setDefault(False)
         self.BackButton.setFlat(True)
         self.BackButton.setObjectName("BackButton")
@@ -109,12 +117,12 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
 
         #SearchButton
         self.SearchButton = QtWidgets.QPushButton(self.centralwidget)
-        self.SearchButton.setGeometry(QtCore.QRect(670, 20, 21, 21))
-        self.SearchButton.setText("S")
+        self.SearchButton.setGeometry(QtCore.QRect(670, 20, 22, 22))
+        #self.SearchButton.setText("")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(":/Go.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(project_dir+"\Icons\Search.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.SearchButton.setIcon(icon2)
-        self.SearchButton.setIconSize(QtCore.QSize(20, 20))
+        self.SearchButton.setIconSize(QtCore.QSize(22, 22))
         self.SearchButton.setDefault(False)
         self.SearchButton.setFlat(True)
         self.SearchButton.setObjectName("SearchButton")
@@ -123,10 +131,10 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
 
         #GoButton
         self.GoButton = QtWidgets.QPushButton(self.centralwidget)
-        self.GoButton.setGeometry(QtCore.QRect(650, 20, 21, 21))
-        self.GoButton.setText("Go")
+        self.GoButton.setGeometry(QtCore.QRect(640, 20, 22, 22))
+        #self.GoButton.setText("Go")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(":/Go.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(project_dir+"\Icons\Go.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.GoButton.setIcon(icon2)
         self.GoButton.setIconSize(QtCore.QSize(20, 20))
         self.GoButton.setDefault(False)
@@ -206,7 +214,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "File Manager"))
-        self.label.setText(_translate("MainWindow", "File Manager "))
+        self.label.setText(_translate("MainWindow", "File M@n@ger"))
         self.lineEdit.setAccessibleName(_translate("MainWindow", "address bar"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.menuEdit.setTitle(_translate("MainWindow", "Edit"))
@@ -231,23 +239,76 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
     #definingFunctions
 
     def show_items(self, lst):
-        print('Start of show_items',lst)
-        global list_of_item
+        global list_of_item,list_of_labels
         for k in list_of_item:
             k.setParent(None)
+        for i in list_of_labels:
+            i.setText("")
         list_of_item = []
         for j,Item in enumerate(lst) :
             self.item = QtWidgets.QPushButton(self.scrollAreaWidgetContents)
             self.item.setFlat(True)
-            self.label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-            self.label.setText(str(j))
-            self.label.setAlignment(QtCore.Qt.AlignCenter)
+            self.item.setObjectName(Item)
+            self.item.setText(os.path.split(Item)[1])
+            self.Label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
+            self.Label.setAlignment(QtCore.Qt.AlignCenter)
+            if os.path.isfile(self.item.objectName()):
+                self.Label.setText(str(os.stat(self.item.objectName()).st_size//(1024*1024))+" Mb "+str(os.path.splitext(self.item.objectName())[1]))
+            else:
+                self.Label.setText("Folder")
             self.formLayout.setWidget(j, QtWidgets.QFormLayout.LabelRole, self.item)
-            self.formLayout.setWidget(j, QtWidgets.QFormLayout.FieldRole, self.label)
-            self.item.setText(Item)
+            self.formLayout.setWidget(j, QtWidgets.QFormLayout.FieldRole, self.Label)
+            self.Show_Icons()
             self.item.clicked.connect(self.selected_item)
             list_of_item.append(self.item)
-        print('Shown', list_of_item)
+            list_of_labels.append(self.Label)
+
+
+
+    def getext(self,path):
+        if os.path.isfile(path):
+            return os.path.splitext(path)[1]
+        else:
+            return "F"
+
+
+    def Show_Icons(self):
+        if self.getext(self.item.text()).upper() in Pasvand_dic["Music"]:
+            Icon = QtGui.QIcon()
+            Icon.addPixmap(QtGui.QPixmap((project_dir+"\Icons\Music.png")))
+            self.item.setIcon(Icon)
+            self.item.setIconSize(QtCore.QSize(50, 50))
+        elif self.getext(self.item.text()).upper() in Pasvand_dic["Film"]:
+            Icon = QtGui.QIcon()
+            Icon.addPixmap(QtGui.QPixmap(project_dir+"\Icons\Film.png"))
+            self.item.setIcon(Icon)
+            self.item.setIconSize(QtCore.QSize(50, 50))
+        elif self.getext(self.item.text()).upper() in Pasvand_dic["Picture"]:
+            Icon = QtGui.QIcon()
+            Icon.addPixmap(QtGui.QPixmap((project_dir + "\Icons\Image.png")))
+            self.item.setIcon(Icon)
+            self.item.setIconSize(QtCore.QSize(50, 50))
+        elif self.getext(self.item.text()).upper() in Pasvand_dic["Docs"]:
+            Icon = QtGui.QIcon()
+            Icon.addPixmap(QtGui.QPixmap((project_dir+"\Icons\Doc.png")))
+            self.item.setIcon(Icon)
+            self.item.setIconSize(QtCore.QSize(50, 50))
+        elif self.getext(self.item.text()).upper() in Pasvand_dic["Copressed"]:
+            Icon = QtGui.QIcon()
+            Icon.addPixmap(QtGui.QPixmap((project_dir+"\Icons\Zip.png")))
+            self.item.setIcon(Icon)
+            self.item.setIconSize(QtCore.QSize(50, 50))
+        elif self.getext(self.item.text()).upper() == "F" :
+            Icon = QtGui.QIcon()
+            Icon.addPixmap(QtGui.QPixmap((project_dir+"\Icons\Folder.png")))
+            self.item.setIcon(Icon)
+            self.item.setIconSize(QtCore.QSize(50, 50))
+        else:
+            Icon = QtGui.QIcon()
+            Icon.addPixmap(QtGui.QPixmap((project_dir+"\Icons\File.png")))
+            self.item.setIcon(Icon)
+            self.item.setIconSize(QtCore.QSize(50, 50))
+
 
     def Search(self, dir, file_or_dirname):
         searching_for = file_or_dirname.lower()
@@ -264,14 +325,12 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             except StopIteration:
                 break
         self.show_items(search_result)
-        print('Searched')
 
     def OpenFile(self, file_path):
-        print(file_path)
         if os.path.isfile(file_path):
             os.startfile(file_path)
         else:
-            print('Jakesh')
+            pass
 
     def go_button(self):
         path = self.lineEdit.text()
@@ -290,8 +349,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         try:
             os.rename(old_name, new_name)
         except OSError:
-            print('File name already exists')
-
+            pass
     def RemoveFile(self, file_path):
         os.remove(file_path)
 
@@ -314,25 +372,21 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         os.mkdir(path)
 
     def selected_item(self,event):
-        print(self.sender().text(),self.sender().isFlat())
+        if not self.sender().isFlat() :
+            self.CheckFileExe(self.sender().text())
         dragged_item.append(self.sender())
         self.sender().setFlat(False)
         if len(dragged_item)>1:
-            for i in dragged_item[0:-2]:
-                i.setFlat(True)
-        if not self.sender().isFlat() :
-            print(self.sender().text(),4444444)
-            self.sender().clicked.connect(lambda :self.Go_to_directory(self.sender().text()))
-
-
+                dragged_item[-2].setFlat(True)
 
     def recent_directories(self):
-        for i,directory in enumerate(recent_directories_list[-5:]):
-            self.RecentAdrresses.addItem("")
+        recent_directories_list_reversed = recent_directories_list[-5:]
+        recent_directories_list_reversed.reverse()
+        for i,directory in enumerate(recent_directories_list_reversed):
+            self.RecentAdrresses.addItem('')
             self.RecentAdrresses.setItemText(i,directory)
 
     def Go_to_directory(self,address):
-        print('Start of go_to_directory')
         recent_directories_list.append(address)
         directories.append(address)
         self.lineEdit.clear()
@@ -342,21 +396,22 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         tup = next(gen)
         lst = [os.path.join(tup[0], i) for i in tup[1] + tup[2]]
         self.show_items(lst)
-        print('Returnd to go')
         del gen
-        print('Gone')
+        self.recent_directories()
 
     def Back(self):
-        print('Starting back')
         os.chdir(os.path.dirname(os.getcwd()))
-        print('1')
         gen = os.walk(os.getcwd())
         tup = next(gen)
         lst = [os.path.join(tup[0], i) for i in tup[1] + tup[2]]
-        print('2')
         del gen
         self.show_items(lst)
-        print('Got Back')
+
+    def CheckFileExe(self,path):
+        if os.path.isfile(path):
+           self.OpenFile(path)
+        else:
+            self.Go_to_directory(path)
 
 
     def tree_double_click(self,event):
@@ -373,6 +428,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                     self.Go_to_directory(self.model.filePath(self.tree_view.currentIndex()))
             except :
                 pass
+
+import Icons_rc
 
 if __name__ == "__main__":
     import sys
