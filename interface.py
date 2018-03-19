@@ -1,12 +1,31 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import os, shutil, os.path
+import platform
 
+if platform.system() == 'Linux' :
+    homedir = '/home/ali'
+    musicicon ="/Icons/Music.png"
+    filmicon ="/Icons/Film.png"
+    imageicon ="/Icons/Image.png"
+    docicon ="/Icons/Doc.png"
+    zipicon ="/Icons/Zip.png"
+    foldericon ="/Icons/Folder.png"
+    fileicon ="/Icons/File.png"
+else :
+    homedir = 'C:\\'
+    musicicon = "\Icons\Music.png"
+    filmicon = "\Icons\Film.png"
+    imageicon = "\Icons\Image.png"
+    docicon = "\Icons\Doc.png"
+    zipicon = "\Icons\Zip.png"
+    foldericon = "\Icons\Folder.png"
+    fileicon = "\Icons\File.png"
 
 project_dir = os.getcwd()
 NotFoldersList = None
-recent_directories_list = ['/home/ali']
-directories = ['/home/ali']
-tup = next(os.walk('/home/ali'))
+recent_directories_list = [homedir]
+directories = [homedir]
+tup = next(os.walk(homedir))
 list_of_item = []
 list_of_labels = []
 dragged_item = []
@@ -284,21 +303,21 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             self.item.setFlat(True)
             self.item.setObjectName(Item)
             self.item.setText(os.path.split(Item)[1])
-            self.Label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-            self.Label.setAlignment(QtCore.Qt.AlignCenter)
-            if os.path.isfile(self.item.objectName()):
-                self.Label.setText(str(os.stat(self.item.objectName()).st_size//(1024*1024))+" Mb "+str(os.path.splitext(self.item.objectName())[1]))
-            else:
-                self.Label.setText("Folder")
+            # self.Label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
+            # self.Label.setAlignment(QtCore.Qt.AlignCenter)
+            # if os.path.isfile(self.item.objectName()):
+            #     self.Label.setText(str(os.stat(self.item.objectName()).st_size//(1024*1024))+" Mb "+str(os.path.splitext(self.item.objectName())[1]))
+            # else:
+                #self.Label.setText("Folder")
             self.formLayout.setWidget(j, QtWidgets.QFormLayout.LabelRole, self.item)
-            self.formLayout.setWidget(j, QtWidgets.QFormLayout.FieldRole, self.Label)
+            #self.formLayout.setWidget(j, QtWidgets.QFormLayout.FieldRole, self.Label)
             self.Show_Icons()
             self.item.clicked.connect(self.selected_item)
 
 
             list_of_item.append(self.item)
 
-            list_of_labels.append(self.Label)
+            #list_of_labels.append(self.Label)
 
 
 
@@ -312,37 +331,37 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
     def Show_Icons(self):
         if self.getext(self.item.text()).upper() in Pasvand_dic["Music"]:
             Icon = QtGui.QIcon()
-            Icon.addPixmap(QtGui.QPixmap((project_dir+"\Icons\Music.png")))
+            Icon.addPixmap(QtGui.QPixmap((project_dir+musicicon)))
             self.item.setIcon(Icon)
             self.item.setIconSize(QtCore.QSize(50, 50))
         elif self.getext(self.item.text()).upper() in Pasvand_dic["Film"]:
             Icon = QtGui.QIcon()
-            Icon.addPixmap(QtGui.QPixmap(project_dir+"\Icons\Film.png"))
+            Icon.addPixmap(QtGui.QPixmap(project_dir+filmicon))
             self.item.setIcon(Icon)
             self.item.setIconSize(QtCore.QSize(50, 50))
         elif self.getext(self.item.text()).upper() in Pasvand_dic["Picture"]:
             Icon = QtGui.QIcon()
-            Icon.addPixmap(QtGui.QPixmap((project_dir + "\Icons\Image.png")))
+            Icon.addPixmap(QtGui.QPixmap((project_dir +imageicon)))
             self.item.setIcon(Icon)
             self.item.setIconSize(QtCore.QSize(50, 50))
         elif self.getext(self.item.text()).upper() in Pasvand_dic["Docs"]:
             Icon = QtGui.QIcon()
-            Icon.addPixmap(QtGui.QPixmap((project_dir+"\Icons\Doc.png")))
+            Icon.addPixmap(QtGui.QPixmap((project_dir+docicon)))
             self.item.setIcon(Icon)
             self.item.setIconSize(QtCore.QSize(50, 50))
         elif self.getext(self.item.text()).upper() in Pasvand_dic["Copressed"]:
             Icon = QtGui.QIcon()
-            Icon.addPixmap(QtGui.QPixmap((project_dir+"\Icons\Zip.png")))
+            Icon.addPixmap(QtGui.QPixmap((project_dir+zipicon)))
             self.item.setIcon(Icon)
             self.item.setIconSize(QtCore.QSize(50, 50))
         elif self.getext(self.item.text()).upper() == "F" :
             Icon = QtGui.QIcon()
-            Icon.addPixmap(QtGui.QPixmap((project_dir+"\Icons\Folder.png")))
+            Icon.addPixmap(QtGui.QPixmap((project_dir+foldericon)))
             self.item.setIcon(Icon)
             self.item.setIconSize(QtCore.QSize(50, 50))
         else:
             Icon = QtGui.QIcon()
-            Icon.addPixmap(QtGui.QPixmap((project_dir+"\Icons\File.png")))
+            Icon.addPixmap(QtGui.QPixmap((project_dir+fileicon)))
             self.item.setIcon(Icon)
             self.item.setIconSize(QtCore.QSize(50, 50))
 
