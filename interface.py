@@ -506,11 +506,11 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         del new_dir_path
 
     def selected_item(self,event):
+        """select $ drag files"""
         global selected_file, selected_file_to_paste
 
         if not self.sender().isFlat() :
             self.CheckFileExe(self.sender().text())
-        """DOC NEEDED"""
         dragged_item.append(self.sender())
         selected_file = self.sender().objectName()
         if not os.path.isfile(selected_file):
@@ -520,7 +520,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                 dragged_item[-2].setFlat(True)
 
     def recent_directories(self):
-        """DOC"""
+        """show 5 last directories"""
         recent_directories_list_reversed = recent_directories_list[-5:]
         recent_directories_list_reversed.reverse()
         for i,directory in enumerate(recent_directories_list_reversed):
