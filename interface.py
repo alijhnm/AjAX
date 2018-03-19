@@ -4,8 +4,8 @@ import time
 
 recent_directories_list = []
 directories = []
-tup = next(os.walk('C:\\'))
-os.chdir('C:\\')
+tup = next(os.walk('/home/ali'))
+os.chdir('/home/ali')
 list_of_item = []
 initial_list = [os.path.join(tup[0], i) for i in tup[1] + tup[2]]
 dragged_item = []
@@ -215,6 +215,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.actionZip.triggered.connect(self.action_zip)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+
         #CallFunctions
         self.show_items(initial_list)
         self.recent_directories()
@@ -263,7 +264,50 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             self.formLayout.setWidget(j, QtWidgets.QFormLayout.FieldRole, self.label)
             self.item.setText(Item)
             self.item.clicked.connect(self.selected_item)
+
+            # contextMenu Policy
+            self.item.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+            self.item.customContextMenuRequested.connect(self.show_context)
+            # setting menu actions
+            self.popupMenu = QtWidgets.QMenu(self)
+            self.popupMenu.addAction(QtWidgets.QAction('New Folder', self, triggered=self.newact))
+            self.popupMenu.addAction(QtWidgets.QAction('Copy', self, triggered=self.copyact))
+            self.popupMenu.addAction(QtWidgets.QAction('Cut', self, triggered=self.cutact))
+            self.popupMenu.addSeparator()
+            self.popupMenu.addAction(QtWidgets.QAction('test1', self, triggered=self.func1))
+            self.popupMenu.addAction(QtWidgets.QAction('test2', self, triggered=self.func2))
+
             list_of_item.append(self.item)
+
+        # defining func1 action
+
+    def func1(self):
+        print('test1 action done')
+
+            # defining func2 action
+
+    def func2(self):
+        print('test2 action done')
+
+            # defining newfolder action
+
+    def newact(self):
+        print('NewFolder act done')
+
+            # defining copy action
+
+    def copyact(self):
+        print('Copy act done')
+
+            # defining cut action
+
+    def cutact(self):
+        print('Cut act done')
+
+            # showing context menu
+
+    def show_context(self, event):
+        self.popupMenu.exec_(self.mapToGlobal(event))
 
     def Search(self, dir, file_or_dirname):
         """Searches for file_or_dir_name in directory and its subdirectories"""
