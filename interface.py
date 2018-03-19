@@ -184,6 +184,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.popupMenu.addAction(QtWidgets.QAction('Coming soon...', self, triggered=self.copyact))
         self.popupMenu.addAction(QtWidgets.QAction('Coming soon...', self, triggered=self.cutact))
         self.popupMenu.addSeparator()
+        self.popupMenu.addAction(QtWidgets.QAction('تماس با سازنده', self, triggered=self.show_Tams))
         self.popupMenu.addAction(QtWidgets.QAction('Exit', self, triggered=self.Exit))
         #self.popupMenu.addAction(QtWidgets.QAction('test2', self, triggered=self.func2))
 
@@ -280,6 +281,10 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         #self.actionZip.clicked.connect(lambda: ZipFile("*", "*"))
 
     #definingFunctions
+
+    def show_Tams(self):
+        list_e_sazandegan = ["alijahangiri.m@gmail.com","ali.behroozi@gmail.com","mehdi.seyyedaL@gmail.com","aliSo@gmail.com"]
+        self.show_items(list_e_sazandegan)
 
     def show_items(self, lst):
 
@@ -433,9 +438,9 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             self.OpenFile(path)
         else:
             try:
-                self.Go_to_directory('qwe',path)
+                self.Go_to_directory(path)
             except:
-                pass
+                self.show_items([])
 
     def CopyFile(self, file_path, target_path):
         """Copies the file file_path to the file or directory target_path.
@@ -452,7 +457,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             os.rename(old_name, new_name)
         except OSError:
             pass
-            pass    #####ALIBEHROOZI
 
     def RemoveFile(self, file_path):
         """Deletes file file_path"""
