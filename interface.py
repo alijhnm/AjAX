@@ -1,6 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import os, shutil, os.path
 
+<<<<<<< HEAD
 project_dir = os.getcwd()
 NotFoldersList = None
 recent_directories_list = ['C:\\']
@@ -15,13 +16,24 @@ Pasvand_dic = {"Music":[".PCM",".WAV",".SND",".WMA",".FLAC",".MP3",".AAC",".WMA"
                "Docs":[".DOC",".DOCX",".LOG",".MSG",".RTF",".TXT",".WPD",".WPS"],\
                "Copressed":[".ZIP",".RAR"]}
 
+=======
+recent_directories_list = []
+directories = []
+tup = next(os.walk('/home/ali'))
+os.chdir('/home/ali')
+list_of_item = []
+initial_list = [os.path.join(tup[0], i) for i in tup[1] + tup[2]]
+dragged_item = []
+selected_file=None
+selected_file_to_copy=None
+selected_file_to_cut=None
+selected_file_to_paste=None
+>>>>>>> df97b7b8decafd80d6d6edb2a0f7ab8558cf7c82
 
 class Ui_MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         super(Ui_MainWindow, self).__init__()
-
-initial_list = [os.path.join(tup[0], i) for i in tup[1] + tup[2]]
 
 
 class Ui_MainWindow(QtWidgets.QMainWindow):
@@ -203,7 +215,24 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.menuEdit.addAction(self.actionZip)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuEdit.menuAction())
+        self.actionOpen.setShortcut('Ctrl+O')
+        self.actionOpen.triggered.connect(self.action_open)
+        self.actionNew_file.setShortcut("Ctrl+N")
+        self.actionNew_file.triggered.connect(self.action_newfile)
+        self.actionQuit.setShortcut('Ctrl+Q')
+        self.actionQuit.triggered.connect(self.action_quit)
+        self.actionExit.setShortcut("Ctrl+E")
+        self.actionExit.triggered.connect(self.action_exit)
+        self.actionCopy.setShortcut("Ctrl+C")
+        self.actionCopy.triggered.connect(self.action_copy)
+        self.actionCut.setShortcut("Ctrl+X")
+        self.actionCut.triggered.connect(self.action_cut)
+        self.actionPaste.setShortcut("Ctrl+V")
+        self.actionPaste.triggered.connect(self.action_paste)
+        self.actionZip.setObjectName("actionZip")
+        self.actionZip.triggered.connect(self.action_zip)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
 
         #CallFunctions
         self.show_items(initial_list)
@@ -218,28 +247,32 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.lineEdit.setAccessibleName(_translate("MainWindow", "address bar"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.menuEdit.setTitle(_translate("MainWindow", "Edit"))
-        self.actionOpen.setText(_translate("MainWindow", "open               Ctrl+O"))
+        self.actionOpen.setText(_translate("MainWindow", "open"))
         #self.actionOpen.clicked.connect(lambda :OpenFile("*","*"))
-        self.actionNew_file.setText(_translate("MainWindow", "new file          Ctrl+N"))
+        self.actionNew_file.setText(_translate("MainWindow", "new file"))
         #self.actionNew_file.clicked.connect(lambda: NewFile("*", "*"))
         self.actionQuit.setText(_translate("MainWindow", "Quit"))
         #self.actionQuit.clicked.connect(lambda: Quit("*", "*"))
-        self.actionCopy_Crtl_C.setText(_translate("MainWindow", "Copy              Crtl+C"))
+        self.actionCopy_Crtl_C.setText(_translate("MainWindow", "Copy"))
         #self.actionCopy_Crtl_C.clicked.connect(lambda: CopyFile("*", "*"))
-        self.actionPaste_Ctrl_V.setText(_translate("MainWindow", "Paste              Ctrl+V"))
+        self.actionPaste_Ctrl_V.setText(_translate("MainWindow", "Paste"))
         #self.actionPaste_Ctrl_V.clicked.connect(lambda: PasteFile("*", "*"))
         self.actionExit.setText(_translate("MainWindow", "Exit"))
         #self.actionExit.clicked.connect(lambda: QuitFile("*", "*"))
-        self.actionCopy.setText(_translate("MainWindow", "Copy       Crtl+C"))
-        self.actionCut.setText(_translate("MainWindow", "Cut          Crtl+X"))
-        self.actionPaste.setText(_translate("MainWindow", "Paste       Crtl+V"))
+        self.actionCopy.setText(_translate("MainWindow", "Copy"))
+        self.actionCut.setText(_translate("MainWindow", "Cut"))
+        self.actionPaste.setText(_translate("MainWindow", "Paste"))
         self.actionZip.setText(_translate("MainWindow", "Zip"))
         #self.actionZip.clicked.connect(lambda: ZipFile("*", "*"))
 
     #definingFunctions
 
     def show_items(self, lst):
+<<<<<<< HEAD
         global list_of_item,list_of_labels
+=======
+        global list_of_item
+>>>>>>> df97b7b8decafd80d6d6edb2a0f7ab8558cf7c82
         for k in list_of_item:
             k.setParent(None)
         for i in list_of_labels:
@@ -260,7 +293,21 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             self.formLayout.setWidget(j, QtWidgets.QFormLayout.FieldRole, self.Label)
             self.Show_Icons()
             self.item.clicked.connect(self.selected_item)
+
+            # contextMenu Policy
+            self.item.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+            self.item.customContextMenuRequested.connect(self.show_context)
+            # setting menu actions
+            self.popupMenu = QtWidgets.QMenu(self)
+            self.popupMenu.addAction(QtWidgets.QAction('New Folder', self, triggered=self.newact))
+            self.popupMenu.addAction(QtWidgets.QAction('Copy', self, triggered=self.copyact))
+            self.popupMenu.addAction(QtWidgets.QAction('Cut', self, triggered=self.cutact))
+            self.popupMenu.addSeparator()
+            self.popupMenu.addAction(QtWidgets.QAction('test1', self, triggered=self.func1))
+            self.popupMenu.addAction(QtWidgets.QAction('test2', self, triggered=self.func2))
+
             list_of_item.append(self.item)
+<<<<<<< HEAD
             list_of_labels.append(self.Label)
 
 
@@ -309,8 +356,41 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             self.item.setIcon(Icon)
             self.item.setIconSize(QtCore.QSize(50, 50))
 
+=======
+
+        # defining func1 action
+
+    def func1(self):
+        print('test1 action done')
+
+            # defining func2 action
+
+    def func2(self):
+        print('test2 action done')
+
+            # defining newfolder action
+
+    def newact(self):
+        print('NewFolder act done')
+
+            # defining copy action
+
+    def copyact(self):
+        print('Copy act done')
+
+            # defining cut action
+
+    def cutact(self):
+        print('Cut act done')
+
+            # showing context menu
+
+    def show_context(self, event):
+        self.popupMenu.exec_(self.mapToGlobal(event))
+>>>>>>> df97b7b8decafd80d6d6edb2a0f7ab8558cf7c82
 
     def Search(self, dir, file_or_dirname):
+        """Searches for file_or_dir_name in directory and its subdirectories"""
         searching_for = file_or_dirname.lower()
         search_generator = os.walk(dir)
         search_result = []
@@ -327,12 +407,20 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.show_items(search_result)
 
     def OpenFile(self, file_path):
+<<<<<<< HEAD
         if os.path.isfile(file_path):
             os.startfile(file_path)
         else:
             pass
+=======
+        """Opens a file at file_path. Works exactly as double clicking in windows"""
+        if os.path.isfile(file_path):
+            os.startfile(file_path)
+>>>>>>> df97b7b8decafd80d6d6edb2a0f7ab8558cf7c82
 
     def go_button(self):
+        """Handles go button. If the path given to line edit is a dir shows dirs contents.
+        If it is a file, Opens the file"""
         path = self.lineEdit.text()
         if os.path.isfile(path):
             self.OpenFile(path)
@@ -343,40 +431,70 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                 pass
 
     def CopyFile(self, file_path, target_path):
+        """Copies the file file_path to the file or directory target_path.
+         File_path and target_path should be strings.
+         If file_path specifies a directory,the file will be copied into
+         target_path using the base filename from file_path"""
         shutil.copy2(file_path, target_path)
 
     def RenameFile(self, old_name, new_name):
+        """Renames file old_name to new_name. new_name and old_name are either names
+           at current working directory or full paths.
+           If new name is a directory at a different path file will not rename"""
         try:
             os.rename(old_name, new_name)
         except OSError:
+<<<<<<< HEAD
             pass
+=======
+            pass    #####ALIBEHROOZI
+
+>>>>>>> df97b7b8decafd80d6d6edb2a0f7ab8558cf7c82
     def RemoveFile(self, file_path):
+        """Deletes file file_path"""
         os.remove(file_path)
 
     def RemoveDir(self, dir_path):
+        """Removes an entire directory"""
         shutil.rmtree(dir_path)
 
     def CutFile(self, file_path, target_path):
+        """Cuts a file from file_path and pastes it at target_path"""
         shutil.move(file_path, target_path)
 
     def MakeZip(self, dir, target_path, name):
+        """Compreses a dir at dir_path into a zip file and moves it to target_path"""
         tmp_dir = os.getcwd()
         os.chdir(target_path)
         shutil.make_archive(name, 'zip', dir, dir)
         os.chdir(tmp_dir)
 
-    def ExtractZip(archieve_path, extract_path):
+    def ExtractZip(self, archieve_path, extract_path):
+        """Extracts a zip file from archieve_path to extract_path"""
         shutil.unpack_archive(archieve_path, extract_path)
 
     def MakeDir(self, path=os.getcwd()):
+        """Makes a new directory at current working directory.
+           If path is provided,
+           the new directory will be created there"""
         os.mkdir(path)
 
+<<<<<<< HEAD
     def selected_item(self,event):
         if not self.sender().isFlat() :
             self.CheckFileExe(self.sender().text())
+=======
+    def selected_item(self):
+        """DOC NEEDED"""
+        global selected_file,selected_file_to_paste
+>>>>>>> df97b7b8decafd80d6d6edb2a0f7ab8558cf7c82
         dragged_item.append(self.sender())
         self.sender().setFlat(False)
+        selected_file = self.sender().text()
+        if not os.path.isfile(selected_file):
+            selected_file_to_paste = selected_file
         if len(dragged_item)>1:
+<<<<<<< HEAD
                 dragged_item[-2].setFlat(True)
 
     def recent_directories(self):
@@ -387,8 +505,32 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             self.RecentAdrresses.setItemText(i,directory)
 
     def Go_to_directory(self,address):
+=======
+            for i in dragged_item[0:-2]:
+                i.setFlat(True)
+        if not self.sender().isFlat() :
+            path = self.sender().text()
+            if os.path.isfile(path):
+                func1 = lambda: self.OpenFile(path)
+                self.sender().clicked.connect(func1)
+            else:
+                func2 = lambda: self.Go_to_directory(path)
+                self.sender().clicked.connect(func2)
+
+    def recent_directories(self):
+        """DOC NEEDED"""
+        for i,directory in enumerate(recent_directories_list[-5:]):
+            self.RecentAdrresses.addItem("")
+            self.RecentAdrresses.setItemText(i,directory)
+
+    def Go_to_directory(self,address):
+        """Changes the current working directory to address.
+           Also makes necessary changes to files shown"""
+        global selected_file,selected_file_to_paste
+>>>>>>> df97b7b8decafd80d6d6edb2a0f7ab8558cf7c82
         recent_directories_list.append(address)
         directories.append(address)
+        selected_file=None
         self.lineEdit.clear()
         self.lineEdit.insert(address)
         os.chdir(address)
@@ -397,39 +539,91 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         lst = [os.path.join(tup[0], i) for i in tup[1] + tup[2]]
         self.show_items(lst)
         del gen
+<<<<<<< HEAD
         self.recent_directories()
 
     def Back(self):
+=======
+
+    def Back(self):
+        """Returns to parent directory of current working directory.
+           Also makes necessary changes to files shown and line_edit"""
+>>>>>>> df97b7b8decafd80d6d6edb2a0f7ab8558cf7c82
         os.chdir(os.path.dirname(os.getcwd()))
         gen = os.walk(os.getcwd())
         tup = next(gen)
         lst = [os.path.join(tup[0], i) for i in tup[1] + tup[2]]
         del gen
         self.show_items(lst)
+<<<<<<< HEAD
 
     def CheckFileExe(self,path):
         if os.path.isfile(path):
            self.OpenFile(path)
         else:
             self.Go_to_directory(path)
+=======
+        self.lineEdit.setText(os.getcwd())
+>>>>>>> df97b7b8decafd80d6d6edb2a0f7ab8558cf7c82
 
 
     def tree_double_click(self,event):
-        #control the reaction of the items in TreeView after clicking on them
+        """Handle the event of clicking on the items of Treeview"""
+        global selected_file_to_paste
         if event.button()==QtCore.Qt.LeftButton :
-            try :
-                if os.path.isfile(self.model.filePath(self.tree_view.currentIndex()))==True :
-                    os.startfile(self.model.filePath(self.tree_view.currentIndex()))
-                else :
+            try:
+                if os.path.isfile(self.model.filePath(self.tree_view.currentIndex())):
+                    self.OpenFile(self.model.filePath(self.tree_view.currentIndex()))
+                else:
                     if self.tree_view.isExpanded(self.tree_view.currentIndex()):
                         self.tree_view.collapse(self.tree_view.currentIndex())
-                    else :
+                    else:
                         self.tree_view.expand(self.tree_view.currentIndex())
+                    selected_file_to_paste=self.model.filePath(self.tree_view.currentIndex())
                     self.Go_to_directory(self.model.filePath(self.tree_view.currentIndex()))
-            except :
+            except:
                 pass
 
+<<<<<<< HEAD
 import Icons_rc
+=======
+    def action_open(self):
+        if selected_file != None:
+            os.startfile(selected_file)
+
+    def action_newfile(self):
+        print(654654321987)
+
+    def action_quit(self):
+        MainWindow.close()
+
+    def action_exit(self):
+        MainWindow.close()
+
+    def action_copy(self):
+        global selected_file_to_copy, selected_file_to_cut
+        if selected_file != None:
+            selected_file_to_copy = selected_file
+            selected_file_to_cut = None
+
+    def action_cut(self):
+        global selected_file_to_cut, selected_file_to_copy
+        if selected_file != None:
+            selected_file_to_cut = selected_file
+            selected_file_to_copy = None
+
+    def action_paste(self):
+        if selected_file_to_paste != None:
+            if selected_file_to_copy != None:
+                self.CopyFile(selected_file_to_copy, selected_file_to_paste)
+            if selected_file_to_cut != None:
+                self.CutFile(selected_file_to_cut, selected_file_to_paste)
+
+    def action_zip(self):
+        if selected_file != None:
+            self.MakeZip(selected_file, selected_file, selected_file)
+
+>>>>>>> df97b7b8decafd80d6d6edb2a0f7ab8558cf7c82
 
 if __name__ == "__main__":
     import sys
@@ -439,7 +633,3 @@ if __name__ == "__main__":
     #ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
-
-
-
-
