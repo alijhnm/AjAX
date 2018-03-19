@@ -162,11 +162,11 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         # setting menu actions
         self.popupMenu = QtWidgets.QMenu(self)
         self.popupMenu.addAction(QtWidgets.QAction('New Folder', self, triggered=self.MakeDir))
-        self.popupMenu.addAction(QtWidgets.QAction('Copy', self, triggered=self.copyact))
-        self.popupMenu.addAction(QtWidgets.QAction('Cut', self, triggered=self.cutact))
+        self.popupMenu.addAction(QtWidgets.QAction('Coming soon...', self, triggered=self.copyact))
+        self.popupMenu.addAction(QtWidgets.QAction('Coming soon...', self, triggered=self.cutact))
         self.popupMenu.addSeparator()
-        self.popupMenu.addAction(QtWidgets.QAction('test1', self, triggered=self.func1))
-        self.popupMenu.addAction(QtWidgets.QAction('test2', self, triggered=self.func2))
+        self.popupMenu.addAction(QtWidgets.QAction('Exit', self, triggered=self.Exit))
+        #self.popupMenu.addAction(QtWidgets.QAction('test2', self, triggered=self.func2))
 
         #FormLayout
         self.formLayout = QtWidgets.QFormLayout(self.scrollAreaWidgetContents)
@@ -350,7 +350,9 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
 
         # defining func1 action
 
-    def func1(self):
+    def Exit(self):
+        sys.exit(app.exec_())
+
         print('test1 action done')
 
             # defining func2 action
